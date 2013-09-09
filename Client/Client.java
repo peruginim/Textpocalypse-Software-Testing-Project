@@ -14,10 +14,7 @@ public class Client implements ActionListener
 
 	//Client Frame
 	JFrame clientFrame;
-	JPanel loginPanel, serverPanel, exitPanel;
-	
-	//Exit Panel
-	JButton exitButton;
+	JPanel loginPanel, serverPanel, emptyPanel;
 	
 	//Login Panel
 	JPanel loginCredPanel;
@@ -25,6 +22,7 @@ public class Client implements ActionListener
 	JLabel loginIdText, passwordText;
 	JTextField usernameTextBox;
 	JPasswordField passwordTextBox;
+	JButton exitButton;
 	
 	//Server Panel
 	JLabel serverStatus;
@@ -45,14 +43,14 @@ public class Client implements ActionListener
 	
 	public void createFrame()
 	{
-		clientFrame = new JFrame("Blah");
+		clientFrame = new JFrame("Textpocalypse: Purdue");
 		clientFrame.setLayout(new BorderLayout());
-		clientFrame.setSize(750, 750);
+		clientFrame.setSize(500, 200);
 		
 		clientFrame.add(loginPanel, BorderLayout.CENTER);
 		clientFrame.add(serverPanel, BorderLayout.EAST);
-		clientFrame.add(exitPanel, BorderLayout.PAGE_END);
 		
+		clientFrame.setResizable(false);
 		clientFrame.setVisible(true);
 	}
 	
@@ -65,19 +63,21 @@ public class Client implements ActionListener
 		loginCredPanel.add(passwordText);
 		loginCredPanel.add(passwordTextBox);
 		
+		//EmtpyPanel
+		emptyPanel = new JPanel(new GridLayout(1,1));
+		
 		//LoginPanel
-		loginPanel = new JPanel(new GridLayout(3, 1));
-		loginPanel.add(newUserButton);
+		loginPanel = new JPanel(new GridLayout(5, 1));
 		loginPanel.add(loginCredPanel);
+		loginPanel.add(newUserButton);
 		loginPanel.add(loginButton);
+		loginPanel.add(emptyPanel);
+		loginPanel.add(exitButton);
 		
 		//ServerPanel
-		serverPanel = new JPanel(new GridLayout(2,1));
-		serverPanel.add(serverStatus);
-		
-		//ExitPanel
-		exitPanel = new JPanel(new GridLayout(0, 2));
-		exitPanel.add(exitButton);
+		serverPanel = new JPanel(new BorderLayout());
+		serverPanel.add(serverStatus, BorderLayout.CENTER);
+	
 	}
 	
 	public void createButtons()
