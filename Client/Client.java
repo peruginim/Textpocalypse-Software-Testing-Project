@@ -10,7 +10,6 @@ public class Client implements ActionListener
 {
 	
 	String currentUser;
-	
 
 	//Client Frame
 	JFrame clientFrame;
@@ -43,7 +42,7 @@ public class Client implements ActionListener
 	
 	public void createFrame()
 	{
-		clientFrame = new JFrame("Textpocalypse: Purdue");
+		clientFrame = new JFrame("Textpocalypse: Purdue -- LOGIN");
 		clientFrame.setLayout(new BorderLayout());
 		clientFrame.setSize(500, 200);
 		
@@ -51,6 +50,8 @@ public class Client implements ActionListener
 		clientFrame.add(serverPanel, BorderLayout.EAST);
 		
 		clientFrame.setResizable(false);
+		clientFrame.setLocationRelativeTo(null);
+		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		clientFrame.setVisible(true);
 	}
 	
@@ -69,8 +70,8 @@ public class Client implements ActionListener
 		//LoginPanel
 		loginPanel = new JPanel(new GridLayout(5, 1));
 		loginPanel.add(loginCredPanel);
-		loginPanel.add(newUserButton);
 		loginPanel.add(loginButton);
+		loginPanel.add(newUserButton);
 		loginPanel.add(emptyPanel);
 		loginPanel.add(exitButton);
 		
@@ -107,7 +108,9 @@ public class Client implements ActionListener
 		
 		if(pressed.equals(newUserButton))
 		{
-			//Take to new user screen
+			//Go to new user screen. Hide current frame
+			new CreateNewUser();
+			clientFrame.setVisible(false);
 		}else if(pressed.equals(loginButton))
 		{
 			//Communicate with server to login
@@ -117,4 +120,118 @@ public class Client implements ActionListener
 		}
 	}
 }
+
+
+
+/*
+ *
+ * @CreateNewUser creates a new form allowing the user to 
+ *  enter a desired username and password for character
+ *	creation. This class will send user data to the server
+ *  which will verify the uniqueness of the username.
+ *  
+ */
+
+class CreateNewUser implements ActionListener
+{
+
+	JFrame createUserFrame;
+
+	//createUserPanel
+	JPanel createUserPanel; 
+	JButton createUserButton;
+	JLabel usernameText;
+	JLabel passwordText;
+	JLabel password2Text;
+	JTextField usernameTextBox;
+	JPasswordField passwordTextBox;
+	JPasswordField password2TextBox;
+
+	//textPanel
+	JPanel textPanel;
+	JTextField verificationText;
+
+	public static void main(String[] args)
+	{
+		new CreateNewUser();
+	}
+	
+	public CreateNewUser()
+	{
+		createButtons();
+		createLabels();
+		createPanels();
+		createFrame();
+	}
+	
+	public void createFrame()
+	{
+		createUserFrame = new JFrame("Textpocalypse: Purdue -- CREATE NEW USER");
+		createUserFrame.setLayout(new BorderLayout());
+		createUserFrame.setSize(500, 200);
+		
+		createUserFrame.add(createUserPanel, BorderLayout.CENTER);
+		createUserFrame.add(textPanel, BorderLayout.SOUTH);
+		
+		createUserFrame.setResizable(false);
+		createUserFrame.setLocationRelativeTo(null);
+		createUserFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		createUserFrame.setVisible(true);
+	}
+	
+	public void createPanels()
+	{
+		//createUser Panel
+		createUserPanel = new JPanel(new GridLayout(8, 1));
+		createUserPanel.add(usernameText);
+		createUserPanel.add(usernameTextBox);
+		createUserPanel.add(passwordText);
+		createUserPanel.add(passwordTextBox);
+		createUserPanel.add(password2Text);
+		createUserPanel.add(password2TextBox);
+		createUserPanel.add(createUserButton);
+		createUserPanel.add(verificationText);
+
+		//textPanel
+		textPanel = new JPanel(new GridLayout(1,1));
+		textPanel.add(verificationText);
+
+	}
+
+	public void createButtons()
+	{
+		createUserButton = new JButton("Create New User and Login");
+		createUserButton.addActionListener(this);
+	}
+	
+	public void createLabels()
+	{
+		usernameText = new JLabel("Desired Username:");
+		passwordText = new JLabel("Password:");
+		password2Text = new JLabel("Re-enter password:");
+		usernameTextBox = new JTextField();
+		passwordTextBox = new JPasswordField();
+		password2TextBox = new JPasswordField();
+		verificationText = new JTextField();
+		verificationText.setText("Confirm or deny user creation in this textbox");
+		verificationText.setEditable(false);
+	}
+	
+	public void actionPerformed(ActionEvent e)
+	{
+		Object pressed = e.getSource();
+		
+		if(pressed.equals(createUserButton))
+		{
+			//Create user and login
+
+		}
+	}
+
+
+}
+
+
+
+
 
