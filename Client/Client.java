@@ -110,7 +110,7 @@ public class Client implements ActionListener
 		{
 			//Go to new user screen. Hide current frame
 			new CreateNewUser();
-			clientFrame.setVisible(false);
+			clientFrame.dispose();
 		}else if(pressed.equals(loginButton))
 		{
 			//Communicate with server to login
@@ -139,7 +139,7 @@ class CreateNewUser implements ActionListener
 
 	//createUserPanel
 	JPanel createUserPanel; 
-	JButton createUserButton;
+	JButton createUserButton, backButton;
 	JLabel usernameText;
 	JLabel passwordText;
 	JLabel password2Text;
@@ -182,7 +182,7 @@ class CreateNewUser implements ActionListener
 	public void createPanels()
 	{
 		//createUser Panel
-		createUserPanel = new JPanel(new GridLayout(8, 1));
+		createUserPanel = new JPanel(new GridLayout(9, 1));
 		createUserPanel.add(usernameText);
 		createUserPanel.add(usernameTextBox);
 		createUserPanel.add(passwordText);
@@ -190,6 +190,7 @@ class CreateNewUser implements ActionListener
 		createUserPanel.add(password2Text);
 		createUserPanel.add(password2TextBox);
 		createUserPanel.add(createUserButton);
+		createUserPanel.add(backButton);
 		createUserPanel.add(verificationText);
 
 		//textPanel
@@ -202,6 +203,9 @@ class CreateNewUser implements ActionListener
 	{
 		createUserButton = new JButton("Create New User and Login");
 		createUserButton.addActionListener(this);
+
+		backButton = new JButton("Back");
+		backButton.addActionListener(this);
 	}
 	
 	public void createLabels()
@@ -225,6 +229,25 @@ class CreateNewUser implements ActionListener
 		{
 			//Create user and login
 
+			//Check if passwords match
+			char[] temp = passwordTextBox.getPassword();
+			char[] temp2 = password2TextBox.getPassword();
+			String user = usernameTextBox.getText();
+			String pass = new String(temp);
+			String pass2 = new String(temp2);
+			if(!(pass.equals(pass2)))
+			{
+				verificationText.setText("The passwords you entered do not match");
+			}else
+			{
+				//Check if user is available with the server
+				//if yes go into main menu
+			}
+
+		}else if(pressed.equals(backButton))
+		{
+			createUserFrame.dispose();
+			new Client();
 		}
 	}
 
