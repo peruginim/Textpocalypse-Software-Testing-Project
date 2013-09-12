@@ -8,7 +8,56 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
-public class Client implements ActionListener
+
+/*
+ *
+ *	@Client is an abstract class with four stub methods which must
+ *	be implemented in any child classes.  Child classes of Client 
+ *	should include any GUI screens in Textpocalypse (Login, Create
+ *	User, Menu, Instructions, the actual game).  These screens will 
+ *	create the necessary frames, panels, buttons and labels for its
+ *	screen.  Additionally, these child classes inherit access to the 
+ *	connectToServer function.
+ *
+ */
+
+
+public abstract class Client
+{
+
+	//Creates the login screen
+	public static void main(String[] args)
+	{
+		new Login();
+	}
+
+	//These methods must be implemented in child classes
+	public abstract void createFrame();
+
+	public abstract void createPanels();
+
+	public abstract void createButtons();
+
+	public abstract void createLabels();
+
+	//Child classes can call connectToServer
+	public boolean connectToServer() throws Exception
+	{
+		String receivedSentence;
+		Socket clientSocket = new Socket("localhost", 4444);
+		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		outToServer.writeBytes("Hello, I am the client!\n");
+		receivedSentence = inFromServer.readLine();
+		System.out.println("FROM SERVER: " + receivedSentence);
+		clientSocket.close();
+		return true;
+	}
+
+}
+
+
+class Login extends Client implements ActionListener
 {
 
 	public static String currentUser;
@@ -28,13 +77,11 @@ public class Client implements ActionListener
 	//Server Panel
 	JLabel serverStatus;
 
-
 	public static void main(String[] args)
 	{
-		new Client();
 	}
 
-	public Client()
+	public Login()
 	{
 		createButtons();
 		createLabels();
@@ -48,7 +95,6 @@ public class Client implements ActionListener
 		{
 			serverStatus.setText("Exception! Error with server...");
 		}
-
 	}
 
 	public String getUser()
@@ -142,20 +188,6 @@ public class Client implements ActionListener
 		}
 	}
 
-	public boolean connectToServer() throws Exception
-	{
-		String receivedSentence;
-		Socket clientSocket = new Socket("localhost", 4444);
-		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		outToServer.writeBytes("Hello, I am the client!\n");
-		receivedSentence = inFromServer.readLine();
-		System.out.println("FROM SERVER: " + receivedSentence);
-		clientSocket.close();
-		return true;
-	}
-
-
 }
 
 
@@ -169,11 +201,10 @@ public class Client implements ActionListener
  *  
  */
 
-class CreateNewUser implements ActionListener
+class CreateNewUser extends Client implements ActionListener
 {
 
-
-	Client client = new Client();
+	//Client client = new Client();
 	JFrame createUserFrame;
 
 	//createUserPanel
@@ -192,13 +223,13 @@ class CreateNewUser implements ActionListener
 
 	public static void main(String[] args)
 	{
-		new CreateNewUser();
+		//new CreateNewUser();
 	}
 
 	public CreateNewUser()
 	{
 		//stops extra boxs
-		client.clientFrame.dispose();
+		//client.clientFrame.dispose();
 		createButtons();
 		createLabels();
 		createPanels();
@@ -283,117 +314,116 @@ class CreateNewUser implements ActionListener
 			{
 				//Check if user is available with the server
 				//if yes go into main menu and make currentUser the created User
-				client.setUser(user);
-				new MainMenu();
+				//client.setUser(user);
 				createUserFrame.dispose();
+				new MainMenu();
 				//if no update verificationText telling that the name is taken
 			}
 
 		}else if(pressed.equals(backButton))
 		{
 			createUserFrame.dispose();
-			new Client();
+			new Login();
 		}
 	}
-
-
 }
+
 
 /*
- * 
- * @MainMenu creates the main menu dialog box that gives the options to move into the game or 
+ *
+ * @MainMenu creates the main menu dialog box that gives the options to move into the game or
  * look at instructions or logout
- * 
+ *
  */
 
-class MainMenu implements ActionListener
+class MainMenu extends Client implements ActionListener
 {
-	//This may be sloppy keeping it for now
-	Client client = new Client();
 
-	JFrame mainMenuFrame;
+    JFrame mainMenuFrame;
 
-	//MainMenuFrame
-	JButton instructButton, enterButton, logoutButton;
-	JLabel currentUserLabel;
-	JPanel buttonPanel;
+    //MainMenuFrame
+    JButton instructButton, enterButton, logoutButton;
+    JLabel currentUserLabel;
+    JPanel buttonPanel;
 
-	public static void main(String[] args)
-	{
-		new MainMenu();
-	}
+    public static void main(String[] args)
+    {
+    }
 
-	public MainMenu()
-	{
-		client.clientFrame.dispose();
-		createButtons();
-		createLabels();
-		createPanels();
-		createFrame();
-	}
-
-	public void createFrame()
-	{
+    public MainMenu()
+    {
+        createButtons();
+        createLabels();
+        createPanels();
+        createFrame();
+    }
+    
+    public void createFrame()
+    {		
 		mainMenuFrame = new JFrame("Textpocalypse: Purdue -- MAIN MENU");
-		mainMenuFrame.setLayout(new GridLayout(1,2));
-		mainMenuFrame.setSize(500, 200);
+        mainMenuFrame.setLayout(new GridLayout(1,2));
+        mainMenuFrame.setSize(500, 200);
 
-		mainMenuFrame.add(buttonPanel);
-		mainMenuFrame.add(currentUserLabel);
+        mainMenuFrame.add(buttonPanel);
+        mainMenuFrame.add(currentUserLabel);
 
-		mainMenuFrame.setResizable(false);
-		mainMenuFrame.setLocationRelativeTo(null);
-		mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainMenuFrame.setVisible(true);
+        mainMenuFrame.setResizable(false);
+        mainMenuFrame.setLocationRelativeTo(null);
+        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.setVisible(true);
+    }
 
-	}
+    public void createPanels()
+    {
+        buttonPanel = new JPanel(new GridLayout(3,1));
+        buttonPanel.add(instructButton);
+        buttonPanel.add(enterButton);
+        buttonPanel.add(logoutButton);
+    }
 
-	public void createPanels()
-	{
-		buttonPanel = new JPanel(new GridLayout(3,1));
-		buttonPanel.add(instructButton);
-		buttonPanel.add(enterButton);
-		buttonPanel.add(logoutButton);
-	}
+    public void createLabels()
+    {
+        //String currentUser = client.getUser();
+        currentUserLabel = new JLabel("Current User:  ");
+    }
 
-	public void createLabels()
-	{
-		String currentUser = client.getUser();
-		currentUserLabel = new JLabel("Current User:  " + currentUser);
-	}
+    public void createButtons()
+    {
+        instructButton = new JButton("Instructions");
+        instructButton.addActionListener(this);
 
-	public void createButtons()
-	{
-		instructButton = new JButton("Instructions");
-		instructButton.addActionListener(this);
+        enterButton = new JButton("Enter World");
+        enterButton.addActionListener(this);
 
-		enterButton = new JButton("Enter World");
-		enterButton.addActionListener(this);
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(this);
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        Object pressed = e.getSource();
+        if(pressed.equals(instructButton))
+        {
+            //Go to instructions dialog
+            new Instructions();
+        }else if(pressed.equals(enterButton))
+        {
+            //Go to World Dialog Box
+            mainMenuFrame.dispose();
+            new Game();
+        }else if(pressed.equals(logoutButton))
+        {
+            //client.setUser(null);
+            mainMenuFrame.dispose();
+            new Login();
+        }
 
-		logoutButton = new JButton("Logout");
-		logoutButton.addActionListener(this);
-	}
+    }
 
-	public void actionPerformed(ActionEvent e)
-	{
-		Object pressed = e.getSource();
-		if(pressed.equals(instructButton))
-		{
-			//Go to instructions dialog
-			new Instructions();
-		}else if(pressed.equals(enterButton))
-		{
-			//Go to World Dialog Box
-			mainMenuFrame.dispose();
-			new Game();
-		}else if(pressed.equals(logoutButton))
-		{
-			client.setUser(null);
-			mainMenuFrame.dispose();
-			new Client();
-		}
-	}
+
 }
+
+
 
 /*
  * 
@@ -402,7 +432,7 @@ class MainMenu implements ActionListener
  */
 
 
-class Instructions implements ActionListener
+class Instructions extends Client implements ActionListener
 {
 	JFrame instructFrame;
 
@@ -412,7 +442,7 @@ class Instructions implements ActionListener
 
 	public static void main(String[] args)
 	{
-		new Instructions();
+		//new Instructions();
 	}
 
 	Instructions()
@@ -436,6 +466,7 @@ class Instructions implements ActionListener
 		instructFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		instructFrame.setVisible(true);
 	}
+	public void createPanels(){}
 
 	public void createLabels()
 	{
@@ -458,115 +489,116 @@ class Instructions implements ActionListener
 	}
 }
 
+
+
 /*
  * @The actual game menu
  * 
  */
 
-class Game implements ActionListener
+class Game extends Client implements ActionListener
 {
-	Client client = new Client();
 
-	JFrame gameFrame;
+    JFrame gameFrame;
 
-	//GameFrame
-	JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
+    //GameFrame
+    JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
 
-	//CommandPanel
-	//?
+    //CommandPanel
+    //?
 
-	//MapPanel
-	//?
+    //MapPanel
+    //?
 
-	//chatPanel
-	//?
+    //chatPanel
+    //?
 
-	//ButtonPanel
-	JLabel currentUserLabel;
-	JButton instructButton, logoutButton, exitButton;
+    //ButtonPanel
+    JLabel currentUserLabel;
+    JButton instructButton, logoutButton, exitButton;
 
-	public static void main(String[] args)
-	{
-		new Game();
-	}
+    public static void main(String[] args)
+    {
+    }
+    
+    public Game()
+    {
+        createButtons();
+        createLabels();
+        createPanels();
+        createFrame();
+    }
 
-	public Game()
-	{
-		client.clientFrame.dispose();
-		createButtons();
-		createLabels();
-		createPanels();
-		createFrame();
-	}
+    public void createFrame()
+    {
+        gameFrame = new JFrame("Textpocalypse: Purdue -- GAME");
+        gameFrame.setLayout(new GridLayout(2,2));
+        gameFrame.setSize(750, 750);
 
-	public void createFrame()
-	{
-		gameFrame = new JFrame("Textpocalypse: Purdue -- GAME");
-		gameFrame.setLayout(new GridLayout(2,2));
-		gameFrame.setSize(750, 750);
+        gameFrame.add(commandPanel);
+        gameFrame.add(mapPanel);
+        gameFrame.add(chatPanel);
+        gameFrame.add(buttonPanel);
 
-		gameFrame.add(commandPanel);
-		gameFrame.add(mapPanel);
-		gameFrame.add(chatPanel);
-		gameFrame.add(buttonPanel);
+        gameFrame.setResizable(false);
+        gameFrame.setLocationRelativeTo(null);
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.setVisible(true);
+    }
 
-		gameFrame.setResizable(false);
-		gameFrame.setLocationRelativeTo(null);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.setVisible(true);
-	}
+    public void createPanels()
+    {
+        //This will be decided Later
+        commandPanel = new JPanel(new BorderLayout());
 
-	public void createPanels()
-	{
-		//This will be decided Later
-		commandPanel = new JPanel(new BorderLayout());
+        //This will be decided Later
+        mapPanel = new JPanel(new BorderLayout());
 
-		//This will be decided Later
-		mapPanel = new JPanel(new BorderLayout());
+        //This will be decided Later
+        chatPanel = new JPanel(new BorderLayout());
 
-		//This will be decided Later
-		chatPanel = new JPanel(new BorderLayout());
+        buttonPanel = new JPanel(new GridLayout(4,1));
+        buttonPanel.add(currentUserLabel);
+        buttonPanel.add(instructButton);
+        buttonPanel.add(logoutButton);
+        buttonPanel.add(exitButton);
+    }
 
-		buttonPanel = new JPanel(new GridLayout(4,1));
-		buttonPanel.add(currentUserLabel);
-		buttonPanel.add(instructButton);
-		buttonPanel.add(logoutButton);
-		buttonPanel.add(exitButton);
-	}
+    public void createLabels()
+    {
+    	currentUserLabel = new JLabel("Current User:  ");
+    }
 
-	public void createLabels()
-	{
-		String currentUser = client.getUser();
-		currentUserLabel = new JLabel("Current User:  " + currentUser);
-	}
+    public void createButtons()
+    {
+        instructButton = new JButton("Instructions");
+        instructButton.addActionListener(this);
 
-	public void createButtons()
-	{
-		instructButton = new JButton("Instructions");
-		instructButton.addActionListener(this);
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(this);
 
-		logoutButton = new JButton("Logout");
-		logoutButton.addActionListener(this);
+        exitButton = new JButton("Exit Game");
+        exitButton.addActionListener(this);
+    }
 
-		exitButton = new JButton("Exit Game");
-		exitButton.addActionListener(this);
-	}
+    public void actionPerformed(ActionEvent e)
+    {
+        Object pressed = e.getSource();
+        if(pressed.equals(instructButton))
+        {
+            new Instructions();
+        }else if(pressed.equals(logoutButton))
+        {
+            //client.setUser(null);
+            gameFrame.dispose();
+            new Login();
+        }else if(pressed.equals(exitButton))
+        {
+            System.exit(1);
+        }
+    }
 
-	public void actionPerformed(ActionEvent e)
-	{
-		Object pressed = e.getSource();
-		if(pressed.equals(instructButton))
-		{
-			new Instructions();
-		}else if(pressed.equals(logoutButton))
-		{
-			client.setUser(null);
-			gameFrame.dispose();
-			new Client();
-		}else if(pressed.equals(exitButton))
-		{
-			System.exit(1);
-		}
-	}
+
 
 }
+
