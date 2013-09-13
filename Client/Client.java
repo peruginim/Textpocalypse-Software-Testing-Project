@@ -506,7 +506,8 @@ class Game extends Client implements ActionListener
 
     //CommandPanel
     //?
-
+    JLabel commandResponse;
+    JTextField commandField;
     //MapPanel
     //?
 
@@ -523,6 +524,7 @@ class Game extends Client implements ActionListener
     
     public Game()
     {
+	createTextFields();
         createButtons();
         createLabels();
         createPanels();
@@ -549,7 +551,9 @@ class Game extends Client implements ActionListener
     public void createPanels()
     {
         //This will be decided Later
-        commandPanel = new JPanel(new BorderLayout());
+        commandPanel = new JPanel(new GridLayout(2,1));
+	commandPanel.add(commandResponse);
+	commandPanel.add(commandField);
 
         //This will be decided Later
         mapPanel = new JPanel(new BorderLayout());
@@ -567,8 +571,15 @@ class Game extends Client implements ActionListener
     public void createLabels()
     {
     	currentUserLabel = new JLabel("Current User:  ");
+        commandResponse = new JLabel("Enter Command");
     }
 
+    public void createTextFields()
+    {
+    	commandField = new JTextField();
+	commandField.setMaximumSize( new Dimension( 200, 24 ) );
+	commandField.addActionListener(this);
+    }
     public void createButtons()
     {
         instructButton = new JButton("Instructions");
@@ -595,7 +606,12 @@ class Game extends Client implements ActionListener
         }else if(pressed.equals(exitButton))
         {
             System.exit(1);
-        }
+        }else if(pressed.equals(commandField))
+	{
+	String text = commandField.getText();
+	commandResponse.setText(text);
+	commandField.setText("");
+	}
     }
 
 
