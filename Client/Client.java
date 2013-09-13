@@ -44,7 +44,7 @@ public abstract class Client
 	public boolean connectToServer() throws Exception
 	{
 		String receivedSentence;
-		Socket clientSocket = new Socket("localhost", 4444);
+		Socket clientSocket = new Socket("10.184.140.179", 4444);
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		outToServer.writeBytes("Hello, I am the client!\n");
