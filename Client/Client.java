@@ -25,6 +25,8 @@ import java.net.*;
 public abstract class Client
 {
 
+	public static String currentUser;
+	public static boolean connected = false;
 	//Creates the login screen
 	public static void main(String[] args)
 	{
@@ -50,7 +52,6 @@ public abstract class Client
 		outToServer.writeBytes("Hello, I am the client!\n");
 		receivedSentence = inFromServer.readLine();
 		System.out.println("FROM SERVER: " + receivedSentence);
-		clientSocket.close();
 		return true;
 	}
 
@@ -59,8 +60,6 @@ public abstract class Client
 
 class Login extends Client implements ActionListener
 {
-
-	public static String currentUser;
 
 	//Client Frame
 	JFrame clientFrame;
@@ -89,22 +88,16 @@ class Login extends Client implements ActionListener
 		createFrame();
 		try
 		{ 
-			if ( connectToServer() ) serverStatus.setText("Server is running, better catch it!"); 
+			if(!(connected)){
+				if ( connectToServer() ){ serverStatus.setText("Server is running, better catch it!");
+					connected = true;
+				}
+			}
 		}
 		catch (Exception e)
 		{
 			serverStatus.setText("Exception! Error with server...");
 		}
-	}
-
-	public String getUser()
-	{
-		return currentUser;
-	}
-
-	public void setUser(String user)
-	{
-		currentUser = user;
 	}
 
 	public void createFrame()
@@ -204,7 +197,7 @@ class Login extends Client implements ActionListener
 class CreateNewUser extends Client implements ActionListener
 {
 
-	//Client client = new Client();
+
 	JFrame createUserFrame;
 
 	//createUserPanel
@@ -314,7 +307,7 @@ class CreateNewUser extends Client implements ActionListener
 			{
 				//Check if user is available with the server
 				//if yes go into main menu and make currentUser the created User
-				//client.setUser(user);
+				currentUser = user;
 				createUserFrame.dispose();
 				new MainMenu();
 				//if no update verificationText telling that the name is taken
@@ -383,8 +376,7 @@ class MainMenu extends Client implements ActionListener
 
     public void createLabels()
     {
-        //String currentUser = client.getUser();
-        currentUserLabel = new JLabel("Current User:  ");
+        currentUserLabel = new JLabel("Current User:  " + currentUser);
     }
 
     public void createButtons()
@@ -413,7 +405,7 @@ class MainMenu extends Client implements ActionListener
             new Game();
         }else if(pressed.equals(logoutButton))
         {
-            //client.setUser(null);
+            currentUser = null;
             mainMenuFrame.dispose();
             new Login();
         }
@@ -570,7 +562,7 @@ class Game extends Client implements ActionListener
 
     public void createLabels()
     {
-    	currentUserLabel = new JLabel("Current User:  ");
+    	currentUserLabel = new JLabel("Current User:  " + currentUser);
         commandResponse = new JLabel("Enter Command");
     }
 
@@ -600,7 +592,7 @@ class Game extends Client implements ActionListener
             new Instructions();
         }else if(pressed.equals(logoutButton))
         {
-            //client.setUser(null);
+            currentUser = null;
             gameFrame.dispose();
             new Login();
         }else if(pressed.equals(exitButton))
