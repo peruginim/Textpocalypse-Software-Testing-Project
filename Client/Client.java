@@ -43,16 +43,23 @@ public abstract class Client
 	public abstract void createLabels();
 
 	//Child classes can call connectToServer
-	public boolean connectToServer() throws Exception
+	public boolean connectToServer(String user, int message) throws Exception
 	{
-		String receivedSentence;
-		Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
-		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		outToServer.writeBytes("Hello, I am the client!\n");
-		receivedSentence = inFromServer.readLine();
-		System.out.println("FROM SERVER: " + receivedSentence);
-		return true;
+		switch(message)
+		{
+		//Startup
+		case 1:	String receivedSentence;
+			Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
+			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			outToServer.writeBytes("Hello, I am the client!\n");
+			receivedSentence = inFromServer.readLine();
+			System.out.println("FROM SERVER: " + receivedSentence);
+			return true;
+
+		default: return false;
+		}
+		
 	}
 
 }
@@ -89,7 +96,7 @@ class Login extends Client implements ActionListener
 		try
 		{ 
 			if(!(connected)){
-				if ( connectToServer() ){ serverStatus.setText("Server is running, better catch it!");
+				if ( connectToServer("", 1) ){ serverStatus.setText("Server is running, better catch it!");
 					connected = true;
 				}
 			}
