@@ -45,18 +45,29 @@ public abstract class Client
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, int message) throws Exception
 	{
+		
+		//Intialize connection
+		String receivedSentence;
+		Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
+		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		switch(message)
 		{
 		//Startup
-		case 1:	String receivedSentence;
-			Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
-			DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		case 1:
 			outToServer.writeBytes("Hello, I am the client!\n");
 			receivedSentence = inFromServer.readLine();
 			System.out.println("FROM SERVER: " + receivedSentence);
 			return true;
+		//Login
+		case 2: outToServer.writeBytes(user + message);
+			receivedSentence = inFromServer.readLine();
+			System.out.println("Blah");
+			//return true for now, it will depend on if the user is accepted from the server
+			return true;
 
+		//NewUser
+		case 3: return false;
 		default: return false;
 		}
 		
@@ -180,6 +191,12 @@ class Login extends Client implements ActionListener
 			clientFrame.dispose();
 		}else if(pressed.equals(loginButton))
 		{
+			try{
+				String userTemp = usernameTextBox.getText();
+				boolean accepted = connectToServer(userTemp, 2);
+			}catch(Exception excep){
+				System.out.println("Well fuck");
+			}
 			//Communicate with server to login
 			//Change currentUser to logged in User
 		}else if(pressed.equals(exitButton))
