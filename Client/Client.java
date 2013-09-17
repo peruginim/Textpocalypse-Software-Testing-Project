@@ -60,7 +60,7 @@ public abstract class Client
 			System.out.println("FROM SERVER: " + receivedSentence);
 			return true;
 		//Login
-		case 2: outToServer.writeBytes(user + message);
+		case 2: outToServer.writeBytes(user + ", " + message);
 			receivedSentence = inFromServer.readLine();
 			System.out.println("Blah");
 			//return true for now, it will depend on if the user is accepted from the server
