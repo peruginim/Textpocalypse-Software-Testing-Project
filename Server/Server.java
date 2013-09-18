@@ -3,10 +3,14 @@ import java.io.*;
 
 public class Server extends Thread
 { 
+	public static List[] userList;
+	public static index;
  	protected Socket clientSocket;
 
  	public static void main(String[] args) throws IOException 
   	{ 
+	index = 0;
+	userList = new List[100];
     	ServerSocket serverSocket = null; 
 
    		try { 
@@ -80,4 +84,14 @@ public class Server extends Thread
         } 
     }
 } 
+
+class List
+{
+	String user;
+	String password;
+	String location;
+	//Stats
+	boolean loggedIn;
+}
+
 

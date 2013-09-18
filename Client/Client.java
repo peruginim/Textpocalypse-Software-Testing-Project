@@ -43,19 +43,21 @@ public abstract class Client
 	public abstract void createLabels();
 
 	//Child classes can call connectToServer
-	public boolean connectToServer(String user, int message) throws Exception
+	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-        //String serverHostname = new String ("borg21.cs.purdue.edu");
-        String serverHostname = new String ("localhost");
+        String serverHostname = new String ("borg21.cs.purdue.edu");
+        //String serverHostname = new String ("localhost");
         System.out.println ("Attemping to connect to host " +
 		serverHostname + " on port 4444.");
 
         Socket echoSocket = null;
         PrintWriter out = null;
+	BufferedReader in = null;
 
         try {
             echoSocket = new Socket(serverHostname, 4444);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
+	    in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverHostname);
             System.exit(1);
@@ -70,9 +72,14 @@ public abstract class Client
         	//Startup
        		case 1:
        			out.println("starting new client");
+			break;
        		//Login
- 			case 2:
- 				out.println(user);
+ 		case 2:
+ 			out.println(user + ", " + pass + ", "  + message);
+			System.out.println(in.readLine());
+			break;
+		//NewUser
+		case 3:
         
         }
         
@@ -146,7 +153,7 @@ class Login extends Client implements ActionListener
 		try
 		{ 
 			if(!(connected)){
-				if ( connectToServer("", 1) ){ serverStatus.setText("Server is running, better catch it!");
+				if ( connectToServer("", "",  1) ){ serverStatus.setText("Server is running, better catch it!");
 					connected = true;
 				}
 			}
@@ -232,8 +239,9 @@ class Login extends Client implements ActionListener
 		{
 			try{
 				String userTemp = usernameTextBox.getText();
-				boolean accepted = connectToServer(userTemp, 2);
-				System.out.println(userTemp);
+				char[] passTemp = passwordTextBox.getPassword();
+				String passTemp2 = new String(passTemp);
+				boolean accepted = connectToServer(userTemp, passTemp2, 2);
 			}catch(Exception excep){
 				System.out.println("Well fuck");
 			}
