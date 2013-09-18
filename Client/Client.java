@@ -45,10 +45,50 @@ public abstract class Client
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, int message) throws Exception
 	{
+        //String serverHostname = new String ("borg21.cs.purdue.edu");
+        String serverHostname = new String ("localhost");
+        System.out.println ("Attemping to connect to host " +
+		serverHostname + " on port 4444.");
+
+        Socket echoSocket = null;
+        PrintWriter out = null;
+
+        try {
+            echoSocket = new Socket(serverHostname, 4444);
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host: " + serverHostname);
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for "
+                               + "the connection to: " + serverHostname);
+            System.exit(1);
+        }
+        
+        switch(message)
+        {
+        	//Startup
+       		case 1:
+       			out.println("starting new client");
+       		//Login
+ 			case 2:
+ 				out.println(user);
+        
+        }
+        
+		out.close();
+		echoSocket.close();
+		return true;
+    
+	}
+		
+		
+		/*
 		
 		//Intialize connection
 		String receivedSentence;
-		Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
+		//Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
+		Socket clientSocket = new Socket("localhost", 4444);
 		DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
 		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		switch(message)
@@ -70,9 +110,8 @@ public abstract class Client
 		case 3: return false;
 		default: return false;
 		}
-		
 	}
-
+*/
 }
 
 
@@ -194,6 +233,7 @@ class Login extends Client implements ActionListener
 			try{
 				String userTemp = usernameTextBox.getText();
 				boolean accepted = connectToServer(userTemp, 2);
+				System.out.println(userTemp);
 			}catch(Exception excep){
 				System.out.println("Well fuck");
 			}

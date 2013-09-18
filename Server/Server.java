@@ -1,39 +1,83 @@
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.*; 
+import java.io.*; 
 
-public class Server implements Runnable 
-{
+public class Server extends Thread
+{ 
+ 	protected Socket clientSocket;
 
-	public static void main(String argv[])
-	{
-		Server sv = new Server();
-		sv.run();
-		
+ 	public static void main(String[] args) throws IOException 
+  	{ 
+    	ServerSocket serverSocket = null; 
+
+   		try { 
+        	serverSocket = new ServerSocket(4444); 
+       		System.out.println ("Connection Socket Created");
+         	try { 
+            	while (true)
+                {
+                	System.out.println ("Waiting for Connection");
+                  	new Server (serverSocket.accept()); 
+                }
+             } 
+        	 catch (IOException e) 
+        	 { 
+        	 	System.err.println("Accept failed."); 
+            	System.exit(1); 
+        	} 
+        } 
+    	catch (IOException e) 
+        { 
+        	System.err.println("Could not listen on port: 4444."); 
+         	System.exit(1); 
+        } 
+    	finally
+        {
+        	try {
+         	   serverSocket.close(); 
+            }
+         	catch (IOException e)
+            { 
+            	System.err.println("Could not close port: 4444."); 
+              	System.exit(1); 
+            } 
+        }
 	}
-	
-	public void run()
-	{
-		try 
-		{
-			String clientSentence;
-			ServerSocket welcomeSocket = new ServerSocket(4444);
 
-			while(true)
-			{
-				Socket connectionSocket = welcomeSocket.accept();
-				BufferedReader inFromClient =
-					new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-				DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-				clientSentence = inFromClient.readLine();
-				System.out.println("FROM CLIENT: " + clientSentence);
-				outToClient.writeBytes("Connection with server established!\n");
-			}
-		}
-		catch(IOException e){
-		
-		}
-			
-	}
+ 	private Server (Socket clientSoc)
+   	{
+    	clientSocket = clientSoc;
+    	start();
+   	}
 
-}
+ 	public void run()
+   	{
+    	System.out.println ("New Communication Thread Started");
+
+    	try { 
+       	 	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
+                                      true); 
+        	BufferedReader in = new BufferedReader( 
+                 new InputStreamReader( clientSocket.getInputStream())); 
+
+        	String inputLine; 
+
+        	while ((inputLine = in.readLine()) != null) 
+        	{ 
+ 	       		System.out.println ("Server: " + inputLine); 
+           		out.println(inputLine); 
+
+           		if (inputLine.equals("Bye.")) break; 
+        	} 
+
+        	out.close(); 
+        	in.close(); 
+        	clientSocket.close(); 
+        } 
+   	 	catch (IOException e) 
+        { 
+         	System.err.println("Problem with Communication Server");
+         	System.exit(1); 
+        } 
+    }
+} 
+
