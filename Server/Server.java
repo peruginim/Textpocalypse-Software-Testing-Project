@@ -19,7 +19,11 @@ public class Server extends Thread
 					{
 						if(userList[i].password.equals(pass))
 						{
-							return true;
+							if(userList[i].loggedIn == false)
+							{
+								userList[i].loggedIn = true;
+								return true;
+							}
 						}
 					}
 				}

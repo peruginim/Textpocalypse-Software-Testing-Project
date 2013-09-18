@@ -60,11 +60,11 @@ public abstract class Client
 	    in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverHostname);
-            System.exit(1);
+            //System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for "
                                + "the connection to: " + serverHostname);
-            System.exit(1);
+            //System.exit(1);
         }
         
         switch(message)
@@ -280,7 +280,7 @@ class Login extends Client implements ActionListener
 					new MainMenu();
 				}else
 				{
-					serverStatus.setText("The Username or Password you entered does not exist");
+					serverStatus.setText("The Username or Password you entered does not exist or is in use");
 				}
 			}catch(Exception excep){
 				System.out.println("Well fuck");
