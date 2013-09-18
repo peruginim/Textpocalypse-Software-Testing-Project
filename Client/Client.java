@@ -71,16 +71,46 @@ public abstract class Client
         {
         	//Startup
        		case 1:
-       			out.println("starting new client");
+       			//out.println("starting new client");
 			break;
        		//Login
  		case 2:
- 			out.println(user + ", " + pass + ", "  + message);
-			System.out.println(in.readLine());
-			break;
+ 			out.println(user + "," + pass + ","  + message);
+			String tempOut = in.readLine();
+			if(tempOut.equals("Success"))
+			{
+				//Login Succesful
+				out.close();
+				echoSocket.close();
+				return true;
+			}else
+			{
+				//Login Unsuccessful
+				out.close();
+				echoSocket.close();
+				return false;
+			}
 		//NewUser
 		case 3:
-        
+			out.println(user + "," + pass + "," + message);
+			if(in.readLine().equals("Success"))
+			{
+				out.close();
+				echoSocket.close();
+				return true;
+			}else
+			{
+				//Username is taken
+				out.close();
+				echoSocket.close();
+				return false;
+			}
+       		//Logout
+		case 4:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
         }
         
 		out.close();
@@ -242,6 +272,16 @@ class Login extends Client implements ActionListener
 				char[] passTemp = passwordTextBox.getPassword();
 				String passTemp2 = new String(passTemp);
 				boolean accepted = connectToServer(userTemp, passTemp2, 2);
+				if(accepted)
+				{
+					//User accepted
+					currentUser = userTemp;
+					clientFrame.dispose();
+					new MainMenu();
+				}else
+				{
+					serverStatus.setText("The Username or Password you entered does not exist");
+				}
 			}catch(Exception excep){
 				System.out.println("Well fuck");
 			}
@@ -377,11 +417,23 @@ class CreateNewUser extends Client implements ActionListener
 				verificationText.setText("The passwords you entered do not match");
 			}else
 			{
-				//Check if user is available with the server
-				//if yes go into main menu and make currentUser the created User
-				currentUser = user;
-				createUserFrame.dispose();
-				new MainMenu();
+				try{
+					if(connectToServer(user, pass2, 3))
+					{
+						//Check if user is available with the server
+						//if yes go into main menu and make currentUser the created User
+						currentUser = user;
+						createUserFrame.dispose();
+						new MainMenu();
+					}else
+					{
+						//Username was taken
+						verificationText.setText("The Username selected has been taken!");
+					}
+				}catch(Exception excep)
+				{
+					System.out.print("fasdfasdl;kfj");	
+				}
 				//if no update verificationText telling that the name is taken
 			}
 
@@ -477,9 +529,14 @@ class MainMenu extends Client implements ActionListener
             new Game();
         }else if(pressed.equals(logoutButton))
         {
-            currentUser = null;
-            mainMenuFrame.dispose();
-            new Login();
+	    try{	
+	    	boolean temp = connectToServer(currentUser, "", 4);
+            	currentUser = null;
+            	mainMenuFrame.dispose();
+            	new Login();
+	    }catch(Exception excep){
+
+	    }
         }
 
     }
@@ -663,10 +720,15 @@ class Game extends Client implements ActionListener
         {
             new Instructions();
         }else if(pressed.equals(logoutButton))
-        {
-            currentUser = null;
-            gameFrame.dispose();
-            new Login();
+        {   
+	    try{
+	    	boolean temp = connectToServer(currentUser, "", 4);
+            	currentUser = null;
+            	gameFrame.dispose();
+            	new Login();
+	    }catch(Exception excep){
+		
+	    }
         }else if(pressed.equals(exitButton))
         {
             System.exit(1);

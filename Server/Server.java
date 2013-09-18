@@ -4,9 +4,61 @@ import java.io.*;
 public class Server extends Thread
 { 
 	public static List[] userList;
-	public static index;
+	public static int index;
  	protected Socket clientSocket;
 
+	public boolean handleRequest(String user, String pass, int message)
+	{
+		switch(message)
+		{
+			//Login
+			case 2:
+				//Search
+				for(int i = 0; i < index; i++){
+					if(userList[i].user.equals(user))
+					{
+						if(userList[i].password.equals(pass))
+						{
+							return true;
+						}
+					}
+				}
+				return false;
+			//NewUser
+			case 3:
+				boolean userExists = false;
+				for(int i = 0; i < index; i++)
+				{
+					if(userList[i].user.equals(user))
+					{
+						userExists = true;
+					}
+				}
+				if(userExists == false)
+				{
+					userList[index] = new List();
+					userList[index].user = user;
+					userList[index].password = pass;
+					userList[index].loggedIn = true;
+					index++;
+					return true;
+				}else
+				{
+					return false;
+				}
+			case 4:
+				for(int i = 0; i < index; i++)
+				{
+					if(userList[i].user.equals(user))
+					{
+						userList[i].loggedIn = false;
+						return true;
+					}
+				}
+		}
+		return false;
+	}
+	
  	public static void main(String[] args) throws IOException 
   	{ 
 	index = 0;
@@ -53,6 +105,7 @@ public class Server extends Thread
     	start();
    	}
 
+
  	public void run()
    	{
     	System.out.println ("New Communication Thread Started");
@@ -67,8 +120,17 @@ public class Server extends Thread
 
         	while ((inputLine = in.readLine()) != null) 
         	{ 
- 	       		System.out.println ("Server: " + inputLine); 
-           		out.println(inputLine); 
+ 	       		System.out.println ("Server: " + inputLine);
+			String[] parsedCommand  = inputLine.split(",");
+			boolean temp = handleRequest(parsedCommand[0], parsedCommand[1], Integer.parseInt(parsedCommand[2]));
+			if(temp)
+			{
+				out.println("Success");
+			}else
+			{
+				out.println("Failure");
+			}
+           		//out.println(inputLine); 
 
            		if (inputLine.equals("Bye.")) break; 
         	} 
