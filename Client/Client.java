@@ -7,7 +7,8 @@ import java.io.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /*
  *
@@ -45,8 +46,8 @@ public abstract class Client
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-        String serverHostname = new String ("borg21.cs.purdue.edu");
-        //String serverHostname = new String ("localhost");
+        //String serverHostname = new String ("borg21.cs.purdue.edu");
+        String serverHostname = new String ("localhost");
         System.out.println ("Attemping to connect to host " +
 		serverHostname + " on port 4444.");
 
@@ -627,10 +628,13 @@ class Game extends Client implements ActionListener
 
     //CommandPanel
     //?
-    JLabel commandResponse;
+    JTextArea commandResponse;
     JTextField commandField;
+    JScrollPane scroll;
     //MapPanel
     //?
+    JLabel picLabel;
+    BufferedImage myPicture;
 
     //chatPanel
     //?
@@ -672,12 +676,18 @@ class Game extends Client implements ActionListener
     public void createPanels()
     {
         //This will be decided Later
-        commandPanel = new JPanel(new GridLayout(2,1));
-	commandPanel.add(commandResponse);
-	commandPanel.add(commandField);
+        commandPanel = new JPanel(new BorderLayout());
+	commandPanel.add(scroll, BorderLayout.CENTER);
+	commandPanel.add(commandField, BorderLayout.PAGE_END);
 
         //This will be decided Later
         mapPanel = new JPanel(new BorderLayout());
+	try{myPicture = ImageIO.read(new File("Armstrong.jpg"));
+	}catch(Exception e){
+	System.out.println("wellfuck2");
+	}
+	picLabel = new JLabel(new ImageIcon(myPicture));
+	mapPanel.add(picLabel);
 
         //This will be decided Later
         chatPanel = new JPanel(new BorderLayout());
@@ -692,13 +702,20 @@ class Game extends Client implements ActionListener
     public void createLabels()
     {
     	currentUserLabel = new JLabel("Current User:  " + currentUser);
-        commandResponse = new JLabel("Enter Command");
+        commandResponse = new JTextArea("Enter Command");
+	commandResponse.setLineWrap(true);
+	commandResponse.setEditable(false);
+	commandResponse.setVisible(true);
+	scroll = new JScrollPane(commandResponse);
+	scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//	JScrollPane scroller = new JScrollPane(commandResponse, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//	commandResponse.add(scroller);
     }
 
     public void createTextFields()
     {
     	commandField = new JTextField();
-	commandField.setMaximumSize( new Dimension( 200, 24 ) );
 	commandField.addActionListener(this);
     }
     public void createButtons()
@@ -737,6 +754,14 @@ class Game extends Client implements ActionListener
 	String text = commandField.getText();
 	commandResponse.setText(text);
 	commandField.setText("");
+	try{
+	BufferedImage newImage = ImageIO.read(new File("PUSH.jpg"));
+	picLabel.setIcon(new ImageIcon(newImage));
+	picLabel.repaint();
+	}catch(Exception ee){
+	System.out.println("well fuck3");
+	}
+
 	}
     }
 
