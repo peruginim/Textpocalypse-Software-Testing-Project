@@ -27,3 +27,5 @@ equip X - equips the item X to a useable slot. If the item is a weapon it will
 be equiped in the weapon slot. If there was already a weapon in the weapon
 slot, it will be replaced by X. There is a weapon slot, a head slot, and a
 body slot.
+
+equiped - tells the player what is equiped.
