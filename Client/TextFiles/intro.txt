@@ -6,7 +6,7 @@ you, trying to live without being eaten by some crazy five headed battle toad
 or something like that. In order to survive you will need to gather weapons
 and supplies to aid you. Here are some commands that should be of use to you:
 
-move X- moves your character depending on what direction you choose. You can use any direction (move north, move
+move X - moves your character depending on what direction you choose. You can use any direction (move north, move
 southeast) as long as it is a valid move. 
 
 search area - provides you with information about your surrounding area
@@ -22,3 +22,8 @@ flee - attempt to run from an enemy
 stats - lists player's stats
 
 where - tells the player their current location
+
+equip X - equips the item X to a useable slot. If the item is a weapon it will
+be equiped in the weapon slot. If there was already a weapon in the weapon
+slot, it will be replaced by X. There is a weapon slot, a head slot, and a
+body slot.
