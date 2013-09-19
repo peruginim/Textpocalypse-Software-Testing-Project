@@ -28,6 +28,7 @@ public abstract class Client
 
 	public static String currentUser;
 	public static boolean connected = false;
+	public static String[] stats;
 	//Creates the login screen
 	public static void main(String[] args)
 	{
@@ -112,6 +113,12 @@ public abstract class Client
 				out.close();
 				echoSocket.close();
 				return true;
+				//Stats
+			case 5:
+				//out.println(user + "," + pass + "," + message);
+				//String tempOut = in.readLine();
+				//stats = tempOut.split(",");
+				return false;
 		}
 
 		out.close();
@@ -621,6 +628,7 @@ class Instructions extends Client implements ActionListener
 class Game extends Client implements ActionListener
 {
 
+	String equipThis;
 	JFrame gameFrame;
 
 	//GameFrame
@@ -755,7 +763,11 @@ class Game extends Client implements ActionListener
 		else if(pressed.equals(commandField))
 		{
 			String text = commandField.getText();
-			commandResponse.setText(text);
+			if (text.contains("equip")){
+				String [] array = text.split(" ", 2);
+				equipThis = array[1];
+			}
+			commandResponse.setText(gameLogic(text));
 			commandField.setText("");
 			try{
 				BufferedImage newImage = ImageIO.read(new File("PUSH.jpg"));
@@ -767,6 +779,55 @@ class Game extends Client implements ActionListener
 			}
 
 		}
+	}
+
+	/*
+	 * Reads in command line text for commands.....
+	 */
+	public String gameLogic(String command)
+	{
+		String response = "";
+		switch(command)
+		{
+			case "move":
+				// Should print out what valid moves a player can make.
+				// Ex: Lawson is to the South. The Union is to the SouthEast
+
+				response = ".";
+				break;
+			case "move north":
+				response = ".";
+				break;
+			case "move south":
+				response = ".";
+				break;
+			case "move east":
+				response = ".";
+				break;
+			case "move west":
+				response = ".";
+				break;
+			case "move southeast":
+				response = ".";
+				break;
+			case "move southwest":
+				response = ".";
+				break;
+			case "move northeast":
+				response = ".";
+				break;
+			case "move northwest":
+				response = ".";
+				break;
+			case "equip":
+				response = "rm - rf";
+				break;
+			default:
+				response = "Not a valid command. Please see instructions for a list of commands.";
+				break;
+
+		}
+		return response;
 	}
 
 
