@@ -28,4 +28,4 @@ be equiped in the weapon slot. If there was already a weapon in the weapon
 slot, it will be replaced by X. There is a weapon slot, a head slot, and a
 body slot.
 
-equiped - tells the player what is equiped.
+equipped - tells the player what is equiped.
