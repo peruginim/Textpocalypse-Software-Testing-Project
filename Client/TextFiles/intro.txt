@@ -1,0 +1,24 @@
+Welcome to Purdue "brave" Adventurer! You are about to begin a journey the
+likes of which you have never seen, unless you have played video games prior
+to this one. In that case you've probably seen better but if this is your
+first time you will be amazed! This world is inhabited by players just like
+you, trying to live without being eaten by some crazy five headed battle toad
+or something like that. In order to survive you will need to gather weapons
+and supplies to aid you. Here are some commands that should be of use to you:
+
+move X- moves your character depending on what direction you choose. You can use any direction (move north, move
+southeast) as long as it is a valid move. 
+
+search area - provides you with information about your surrounding area
+
+inventory - lists out what items are in the player's inventory
+
+who - lists players that are on the same spot as you
+
+attack - attempt to attack an enemy
+
+flee - attempt to run from an enemy
+
+stats - lists player's stats
+
+where - tells the player their current location
