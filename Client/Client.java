@@ -38,10 +38,12 @@ public abstract class Client extends Thread implements Runnable
 	public static String[] stats;
 	public static Location[] location;
 	public static List userStats;
+	public static int inventIndex;
 	//Creates the login screen
 	public static void main(String[] args)
 	{
 		//location = new Location[10];
+		inventIndex = 0;
 		new Login();
 	}
 
@@ -131,6 +133,12 @@ public abstract class Client extends Thread implements Runnable
 		case 5:
 			out.println(user + "," + pass + "," + message);
 			userStats = (List)ois.readObject();
+			return true;
+		//send inventory
+		case 6:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
 			return true;
         }
         
@@ -495,6 +503,12 @@ class CreateNewUser extends Client implements ActionListener
 						//Check if user is available with the server
 						//if yes go into main menu and make currentUser the created User
 						currentUser = user;
+						boolean stats = connectToServer(currentUser, "", 5);
+						if(stats)
+						{
+							System.out.println("stats uploaded");
+							System.out.println(userStats.health);
+						}
 						createUserFrame.dispose();
 						new MainMenu();
 					}else
@@ -888,8 +902,8 @@ class Game extends Client implements ActionListener, WindowListener
 		String text = commandField.getText();
 		String [] commandArray = text.split(" ", 2);
 		//equipThis = commandArray[1];
-		gameLogic(commandArray[0], commandArray[1]);
-		commandResponse.setText(commandArray[0]+ commandArray[1]);
+		String response = gameLogic(commandArray[0], commandArray[1]);
+		commandResponse.setText(response);
 		commandField.setText("");
 			
 	}
@@ -944,7 +958,19 @@ class Game extends Client implements ActionListener, WindowListener
     }
     
     
-    
+	public void sendInvent()
+	{
+		String temp = "";
+		for(int i = 0; i < inventIndex; i++)
+		{
+			temp = temp.concat(Integer.toString(userStats.inventory[i]) + "/");
+		}
+		try{
+			boolean sendInvent = connectToServer(currentUser, temp, 6);
+		}catch(Exception e){
+
+		}
+	}
     
 
 	public String normalize(String input)
@@ -965,6 +991,13 @@ class Game extends Client implements ActionListener, WindowListener
 	 */
 	public String gameLogic(String command, String parameters)
 	{
+		if(command.equals("give"))
+		{
+			userStats.inventory[inventIndex++] = Integer.parseInt(parameters);
+			String good = "woot";
+			sendInvent();
+			return good;
+		}
 		parameters = normalize(parameters);
 		System.out.println(parameters);
 		String response = "";
@@ -1113,5 +1146,5 @@ class List implements Serializable
 	int damage;
 	double hitChance;
 	boolean loggedIn;
-	int[] inventory = new int[102];
+	int[] inventory = new int[20];
 }
