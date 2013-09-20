@@ -45,13 +45,12 @@ public class Server extends Thread
 					userList[index].password = pass;
 					userList[index].loggedIn = true;
 					index++;
-					serialize();
-					deserialize();
 					return true;
 				}else
 				{
 					return false;
 				}
+			//Logout
 			case 4:
 				for(int i = 0; i < index; i++)
 				{
@@ -64,82 +63,6 @@ public class Server extends Thread
 		}
 		return false;
 	}
-	
-	
-	/*
- *
- * Serialize saves the array of List objects to disk
- * allowing data to be stored when the server is offline
- *
- */
-	public void serialize(){
-	
-		System.out.println("SERIALIZE!");
-		
-		for (int x=0; x<index; x++)
-		{
-		
-			System.out.println("List to serialize...");
-			System.out.println("User: " + userList[x].user);
-			System.out.println("Password: " + userList[x].password);
-			System.out.println("Location: " + userList[x].location);
-			System.out.println("Logged in: " + userList[x].loggedIn);
-		}
-		
-		try
-  		{
-  			FileOutputStream fileOut = new FileOutputStream("playerdata.ser");
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);
- 	 		out.writeObject(userList);
- 			out.close();
- 			fileOut.close();
-			System.out.println("Serialized data is saved in playerdata.ser");
- 		}
- 		catch(IOException e)
-	 	{
-	  		System.out.println("Error while serializing");
-	  		e.printStackTrace();
-	 	}
-	 	 		 	
-  	}
-  	
-/*
- *
- * Deserialize loads from disk the saved instance of the player database
- *
- */
-	public void deserialize(){
-	
-		System.out.println("DESERIALIZE!");
-		
-    	userList = null;
-     	try
-      	{
-        	FileInputStream fileIn = new FileInputStream("playerdata.ser");
-       		ObjectInputStream in = new ObjectInputStream(fileIn);
-         	userList = (List[]) in.readObject();
-         	in.close();
-		    fileIn.close();
-		}catch(IOException i)
-		{
-			i.printStackTrace();
-		    return;
-		}catch(ClassNotFoundException c)
-		{
-			System.out.println("List class not found");
-		    c.printStackTrace();
-		    return;
-		}
-		for (int x=0; x<index; x++)
-		{
-		
-			System.out.println("Deserialized List...");
-			System.out.println("User: " + userList[x].user);
-			System.out.println("Password: " + userList[x].password);
-			System.out.println("Location: " + userList[x].location);
-			System.out.println("Logged in: " + userList[x].loggedIn);
-		}
-	}	
 	
  	public static void main(String[] args) throws IOException 
   	{ 
@@ -229,30 +152,13 @@ public class Server extends Thread
     }
 } 
 
-
-
-/*
- *
- * @List class stores all pertinent user data
- *
- */
-class List implements Serializable
+class List
 {
 	String user;
 	String password;
 	String location;
-	
-	int health;
-	int strength;
-	int agility;
-	int intelligence;
-	int armor;
-	int critChance;
-	int critModifier;
-	int damage;
-	int hitChance;
+	//Stats
 	boolean loggedIn;
-	int [] inventory = new int[102];
 }
 
 
