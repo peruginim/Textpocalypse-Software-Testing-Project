@@ -281,7 +281,51 @@ public class Server extends Thread
 					System.out.println(eblah);
 				}
 				
-			
+			}else if(Integer.parseInt(parsedCommand[2]) == 6)
+			{
+				String[] invent = parsedCommand[1].split("/");
+				List returnList = handleList(parsedCommand[0]);
+				for(int i = 0; i < invent.length; i++)
+				{
+					returnList.inventory[i] = Integer.parseInt(invent[i]);
+					System.out.print(returnList.inventory[i]);
+				}
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 7)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.health = Integer.parseInt(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 8)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.strength = Integer.parseInt(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 9)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.armor = Integer.parseInt(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 10)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.critChance = Double.parseDouble(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 11)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.critModifier = Integer.parseInt(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 12)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.damage = Integer.parseInt(parsedCommand[1]);
+
+			}else if(Integer.parseInt(parsedCommand[2]) == 13)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.hitChance = Double.parseDouble(parsedCommand[1]);
+
 			}else{
 				boolean temp = handleRequest(parsedCommand[0], parsedCommand[1], Integer.parseInt(parsedCommand[2]));
 				if(temp)
@@ -332,7 +376,7 @@ class List implements Serializable
 	int damage = 1 + strength;
 	double hitChance = 0.9;
 	boolean loggedIn;
-	int [] inventory = new int[102];
+	int [] inventory = new int[20];
 }
 
 

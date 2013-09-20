@@ -140,6 +140,48 @@ public abstract class Client extends Thread implements Runnable
 			out.close();
 			echoSocket.close();
 			return true;
+		//sendHealth
+		case 7:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send strength
+		case 8:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send armor
+		case 9:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send critchance
+		case 10:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send crit mod
+		case 11:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send damage
+		case 12:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+		//send hitChance
+		case 13:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
         }
         
 		out.close();
@@ -351,6 +393,7 @@ class Login extends Client implements ActionListener
 					{
 						System.out.println("stats uploaded");
 						System.out.println(userStats.health);
+						System.out.println(userStats.inventory[0]);
 					}
 					new MainMenu();
 				}else
@@ -508,6 +551,7 @@ class CreateNewUser extends Client implements ActionListener
 						{
 							System.out.println("stats uploaded");
 							System.out.println(userStats.health);
+							System.out.println(userStats.inventory[0]);
 						}
 						createUserFrame.dispose();
 						new MainMenu();
@@ -972,7 +1016,75 @@ class Game extends Client implements ActionListener, WindowListener
 		}
 	}
     
+	public void sendHealth()
+	{
+		String temp = Integer.toString(userStats.health);
+		try{
+			boolean sendHealth = connectToServer(currentUser, temp, 7);
+		}catch(Exception e){
+		
+		}
+	}
 
+	public void sendStr()
+	{
+		String temp = Integer.toString(userStats.strength);
+		try{
+			boolean sendStr = connectToServer(currentUser, temp, 8);
+		}catch(Exception e){
+	
+		}
+	}
+
+	public void sendArmor()
+	{
+		String temp = Integer.toString(userStats.armor);
+		try{
+			boolean sendArmor = connectToServer(currentUser, temp, 9);
+		}catch(Exception e){
+	
+		}
+	}
+
+	public void sendCritChance()
+	{
+		String temp = String.valueOf(userStats.critChance);
+		try{
+			boolean sendCritChance = connectToServer(currentUser, temp, 10);
+		}catch(Exception e){
+	
+		}
+	}
+	
+	public void sendCritMod()
+	{
+		String temp = String.valueOf(userStats.critModifier);
+		try{
+			boolean sendCritMod = connectToServer(currentUser, temp , 11);
+		}catch(Exception e){
+
+		}
+	}
+	
+	public void sendDamage()
+	{
+		String temp = Integer.toString(userStats.damage);
+		try{
+			boolean sendDamage = connectToServer(currentUser, temp, 12);
+		}catch(Exception e){
+
+		}
+	}
+
+	public void sendHitChance()
+	{
+		String temp = String.valueOf(userStats.hitChance);
+		try{
+			boolean sendHitChance = connectToServer(currentUser, temp, 13);
+		}catch(Exception e){
+
+		}
+	}
 	public String normalize(String input)
 	{
 		char temp[] = input.toCharArray();
