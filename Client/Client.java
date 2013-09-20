@@ -59,8 +59,8 @@ public abstract class Client extends Thread implements Runnable
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-		String serverHostname = new String ("borg18.cs.purdue.edu");
-		//String serverHostname = new String ("localhost");
+		//String serverHostname = new String ("borg21.cs.purdue.edu");
+		String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4444.");
 
@@ -199,7 +199,7 @@ public abstract class Client extends Thread implements Runnable
 	public void run()
 	{
 		System.out.println("Started Thread");
-		String serverHostname = new String ("borg18.cs.purdue.edu");
+		String serverHostname = new String ("borg21.cs.purdue.edu");
 		//String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4445.");
@@ -820,8 +820,10 @@ class Instructions extends Client implements ActionListener
 
 class Game extends Client implements ActionListener, WindowListener
 {
-	String equipThis;
-	JFrame gameFrame;
+    	JFrame gameFrame;
+    	String[][] weaponArray;
+    	String equippedArmor;
+    	String equippedWeapon;
 	public static String[][] location;
 	public static boolean isFighting;
 
@@ -851,12 +853,66 @@ class Game extends Client implements ActionListener, WindowListener
 	public Game()
 	{
 		instantiateLocations();
+		createWeapons();
 		createTextFields();
 		createButtons();
 		createLabels();
 		createPanels();
 		createFrame();
 	}
+
+	public void createWeapons()
+    	{
+		inventIndex = userStats.inventIndex;
+		equippedArmor = null;
+		equippedWeapon = null;
+		weaponArray = new String[15][3];
+		weaponArray[0][0] = "axe";
+		weaponArray[0][1] = "0";
+		weaponArray[0][2] = "3";
+		weaponArray[1][0] = "sword";
+		weaponArray[1][1] = "1";
+		weaponArray[1][2] = "3";
+		weaponArray[2][0] = "hammer";
+		weaponArray[2][1] = "2";
+		weaponArray[2][2] = "4";
+		weaponArray[3][0] = "gnome";
+		weaponArray[3][1] = "3";
+		weaponArray[3][2] = "6";
+		weaponArray[4][0] = "bow";
+		weaponArray[4][1] = "4";
+		weaponArray[4][2] = "4";
+		weaponArray[5][0] = "brokenlongboard";
+		weaponArray[5][1] = "5";
+		weaponArray[5][2] = "2";
+		weaponArray[6][0] = "knife";
+		weaponArray[6][1] = "6";
+		weaponArray[6][2] = "2";
+		weaponArray[7][0] = "glassbottle";
+		weaponArray[7][1] = "7";
+		weaponArray[7][2] = "2";
+		weaponArray[8][0] = "purduepete'shammer";
+		weaponArray[8][1] = "8";
+		weaponArray[8][2] = "6";
+		weaponArray[9][0] = "iudiploma";
+		weaponArray[9][1] = "9";
+		weaponArray[9][2] = "0";
+		weaponArray[10][0] = "footballpads";
+		weaponArray[10][1] = "10";
+		weaponArray[10][2] = "1";
+		weaponArray[11][0] = "leatherarmor";
+		weaponArray[11][1] = "11";
+		weaponArray[11][2] = "2";
+		weaponArray[12][0] = "potsandpans";
+		weaponArray[12][1] = "12";
+		weaponArray[12][2] = "3";
+		weaponArray[13][0] = "steelarmor";
+		weaponArray[13][1] = "13";
+		weaponArray[13][2] = "4";
+		weaponArray[14][0] = "gnomehat";
+		weaponArray[14][1] = "14";
+		weaponArray[14][2] = "5";
+    	}
 
 	public void instantiateLocations()
 	{
@@ -1095,6 +1151,8 @@ class Game extends Client implements ActionListener, WindowListener
 		scroll = new JScrollPane(commandResponse);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		DefaultCaret caret2 = (DefaultCaret)commandResponse.getCaret();
+		caret2.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
 
 
@@ -1294,7 +1352,8 @@ class Game extends Client implements ActionListener, WindowListener
 
 	public void sendDamage()
 	{
-		String temp = Integer.toString(userStats.damage);
+		int tempInt = 1 + userStats.strength;
+		String temp = Integer.toString(tempInt);
 		try{
 			boolean sendDamage = connectToServer(currentUser, temp, 12);
 		}catch(Exception e){
@@ -1345,6 +1404,29 @@ class Game extends Client implements ActionListener, WindowListener
 		}
 		String output = new String(temp);
 		return output;
+	}
+
+	public void equip(String s, int itemToEquip)
+	{
+		//if equip is armor check if armor is equipped
+		if(itemToEquip >= 10)
+		{
+			//Armor
+			equippedArmor = s;
+			userStats.armor = Integer.parseInt(weaponArray[itemToEquip][2]);
+			sendArmor();
+		}else if(itemToEquip < 10)
+		{
+			equippedWeapon = s;
+			userStats.strength += Integer.parseInt(weaponArray[itemToEquip][2]);
+			userStats.damage = 1 + userStats.strength;
+			sendDamage();
+		}
+		//	then set equipped armor to equipped armor
+
+		//Do the same for weapons
+
+		//update stats
 	}
 	/*
 	 * Reads in command line text for commands.....
@@ -1506,10 +1588,33 @@ class Game extends Client implements ActionListener, WindowListener
 					response = "Not a valid move. Ex: 'move south' or 'move northwest'";
 				break;
 			case "inventory":
-				response = "Items should appear here";
+				if(parameters.equals("show"))
+				{
+					String temp = "";
+					int tempItem = 0;
+					String actualItem = "";
+					String itemStats = "";
+					for(int i = 0; i < inventIndex; i++)
+					{	
+						tempItem = userStats.inventory[i];
+						actualItem = weaponArray[tempItem][0];
+						itemStats = weaponArray[tempItem][2];
+						temp = temp.concat(actualItem + " +" + itemStats + "\n");
+					}
+					response = temp;
+				}else
+				{
+					response = "Try adding show after inventory";
+				}
 				break;
 			case "stats":
-				response = "Stats should appear here";
+				if(parameters.equals("show"))
+				{
+					response = "Health: " + Integer.toString(userStats.health) + "\n" + "Strength: " + Integer.toString(userStats.strength) + "\n" + "Armor: " + Integer.toString(userStats.armor) + "\n" + "Crit Chance: " + String.valueOf(userStats.critChance) + "\n" + "Crit Modifier: " + Integer.toString(userStats.critModifier) + "\n" + "Damage: " + Integer.toString(userStats.damage) + "\n" + "Hit Chance: " + String.valueOf(userStats.hitChance);
+				}else
+				{
+					response = "Try adding show to the end";
+				}
 				break;
 			case "attack":
 				if(parameters.equals("monster"))
@@ -1584,7 +1689,7 @@ class Game extends Client implements ActionListener, WindowListener
 				if(parameters.equals("area"))
 				{
 					if(isFighting){
-						response = "You are currently engaged in battle! You can attack or flee.";
+						response = "You are currently engaged in battle!";
 						break;
 					}
 
@@ -1609,7 +1714,38 @@ class Game extends Client implements ActionListener, WindowListener
 				// 		response += location.thresh3
 				break;
 			case "equip":
-				response = "rm - rf";
+				int itemToEquip = 500;
+				boolean itemFound = false;
+				for(int i = 0; i < 15; i++)
+				{
+					if(weaponArray[i][0].equals(parameters))
+					{
+						itemFound = true;
+						itemToEquip = i;
+					}
+				}
+				if(itemFound)
+				{
+					boolean doesHas = false;
+					for(int i = 0; i < inventIndex; i++)
+					{
+						if(userStats.inventory[i] == Integer.parseInt(weaponArray[itemToEquip][1]));
+						{
+							doesHas = true;
+						}
+					}
+					if(doesHas)
+					{
+						equip(parameters, itemToEquip);
+						response = "You have equipped" + parameters;
+						System.out.println("Equipped Weapon: " + equippedWeapon + " Equipped Armor: " + equippedArmor);
+					}else
+					{
+						response = "You don't have that item!";
+					}
+				}else{
+					response = "Item does not exist";
+				}
 				break;
 			default:
 				response = "Not a valid command. Please see instructions for a list of commands.";
@@ -1634,6 +1770,7 @@ class List implements Serializable
 	String password;
 	String location;
 
+	int inventIndex;
 	int health;
 	int strength;
 	int agility;

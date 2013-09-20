@@ -61,6 +61,7 @@ public class Server extends Thread
 					if(userList[i].user.equals(user))
 					{
 						userList[i].loggedIn = false;
+						userList[i].damage = 1 + userList[i].strength;
 						serializeToFile();
 						return true;
 					}
@@ -289,7 +290,8 @@ public class Server extends Thread
 			{
 				String[] invent = parsedCommand[1].split("/");
 				List returnList = handleList(parsedCommand[0]);
-				for(int i = 0; i < invent.length; i++)
+				returnList.inventIndex = invent.length;
+				for(int i = 0; i < returnList.inventIndex; i++)
 				{
 					returnList.inventory[i] = Integer.parseInt(invent[i]);
 					System.out.print(returnList.inventory[i]);
@@ -370,6 +372,7 @@ class List implements Serializable
 	String password;
 	String location = "P.U.S.H.";
 	
+	int inventIndex = 0;
 	int health = 10;
 	int strength = 1;
 	int agility = 1;
