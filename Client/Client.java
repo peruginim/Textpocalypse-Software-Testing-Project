@@ -59,8 +59,8 @@ public abstract class Client extends Thread implements Runnable
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-		String serverHostname = new String ("borg18.cs.purdue.edu");
-		//String serverHostname = new String ("localhost");
+		//String serverHostname = new String ("borg18.cs.purdue.edu");
+		String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4444.");
 
@@ -199,8 +199,8 @@ public abstract class Client extends Thread implements Runnable
 	public void run()
 	{
 		System.out.println("Started Thread");
-		String serverHostname = new String ("borg18.cs.purdue.edu");
-		//String serverHostname = new String ("localhost");
+		//String serverHostname = new String ("borg18.cs.purdue.edu");
+		String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4445.");
 
@@ -544,6 +544,9 @@ class CreateNewUser extends Client implements ActionListener
 			if(!(pass.equals(pass2)))
 			{
 				verificationText.setText("The passwords you entered do not match!");
+			}else if(pass.equals("") && pass2.equals(""))
+			{
+				verificationText.setText("The passwords you entered are empty!");	
 			}else
 			{
 				try{
