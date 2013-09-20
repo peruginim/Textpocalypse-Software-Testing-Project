@@ -36,9 +36,161 @@ public abstract class Client extends Thread implements Runnable
 	public static String outToClient;
 	public static BufferedReader in2;
 	public static String[] stats;
+	public static Location[] location;
 	//Creates the login screen
 	public static void main(String[] args)
 	{
+		location = new Location[10];
+		location[0].locName = "P.U.S.H.";
+		location[0].picName = "PUSH.jpg";
+		location[0].north = "Ross-Ade";
+		location[0].south = null;
+		location[0].east = null;
+		location[0].west = null;
+		location[0].northeast = "Armstrong";
+		location[0].northwest = null;
+		location[0].southeast = null;
+		location[0].southwest = "Lawson";
+		location[0].description = "push.txt";
+		location[0].thresh1 = "push_thresh1.txt";
+		location[0].thresh2 = "push_thresh2.txt";
+		location[0].thresh3 = "push_thresh3.txt";
+
+
+		location[1].locName = "Armstrong";
+		location[1].picName = "Armstrong.jpg";
+		location[1].north = null;
+		location[1].south = "Elliot";
+		location[1].east = null;
+		location[1].west = null;
+		location[1].northeast = null;
+		location[1].northwest = null;
+		location[1].southeast = "Engineering Mall";
+		location[1].southwest = "P.U.S.H.";
+		location[1].description = "armstrong.txt";
+		location[1].thresh1 = "armstrong_thresh1.txt";
+		location[1].thresh2 = "armstrong_thresh2.txt";
+		location[1].thresh3 = "armstrong_thresh3.txt";
+
+		location[2].locName = "Lawson";
+		location[2].picName = "Lawson.jpg";
+		location[2].north = null;
+		location[2].south = "Lily";
+		location[2].east = "Elliot";
+		location[2].west = "Co-Rec";
+		location[2].northeast = "P.U.S.H.";
+		location[2].northwest = null;
+		location[2].southeast = null;
+		location[2].southwest = "Discovery Park";
+		location[2].description = "lawson.txt";
+		location[2].thresh1 = "lawson_thresh1.txt";
+		location[2].thresh2 = "lawson_thresh2.txt";
+		location[2].thresh3 = "lawson_thresh3.txt";
+
+		location[3].locName = "Elliot";
+		location[3].picName = "Elliot.jpg";
+		location[3].north = "Armstrong";
+		location[3].south = null;
+		location[3].east = "Union";
+		location[3].west = "Lawson";
+		location[3].northeast = "Engineering Mall";
+		location[3].northwest = null;
+		location[3].southeast = null;
+		location[3].southwest = "Lily";
+		location[3].description = "elliot.txt";
+		location[3].thresh1 = "elliot_thresh1.txt";
+		location[3].thresh2 = "elliot_thresh2.txt";
+		location[3].thresh3 = "elliot_thresh3.txt";
+
+		location[4].locName = "Engineering Mall";
+		location[4].picName = "engineeringMall.jpg";
+		location[4].north = null;
+		location[4].south = null;
+		location[4].east = null;
+		location[4].west = null;
+		location[4].northeast = null;
+		location[4].northwest = "Armstrong";
+		location[4].southeast = "Union";
+		location[4].southwest = "Elliot";
+		location[4].description = "engmall.txt";
+		location[4].thresh1 = "engmall_thresh1.txt";
+		location[4].thresh2 = "engmall_thresh2.txt";
+		location[4].thresh3 = "engmall_thresh3.txt";
+
+		location[5].locName = "Union";
+		location[5].picName = "stunion.jpg";
+		location[5].north = null;
+		location[5].south = null;
+		location[5].east = null;
+		location[5].west = "Elliot";
+		location[5].northeast = null;
+		location[5].northwest = "Engineering Mall";
+		location[5].southeast = null;
+		location[5].southwest = null;
+		location[5].description = "union.txt";
+		location[5].thresh1 = "union_thresh1.txt";
+		location[5].thresh2 = "union_thresh2.txt";
+		location[5].thresh3 = "union_thresh3.txt";
+
+		location[6].locName = "Lily";
+		location[6].picName = "Lily.jpg";
+		location[6].north = "Lawson";
+		location[6].south = null;
+		location[6].east = null;
+		location[6].west = "Discovery Park";
+		location[6].northeast = "Elliot";
+		location[6].northwest = null;
+		location[6].southeast = null;
+		location[6].southwest = "Lawson";
+		location[6].description = "lily.txt";
+		location[6].thresh1 = "lily_thresh1.txt";
+		location[6].thresh2 = "lily_thresh2.txt";
+		location[6].thresh3 = "lily_thresh3.txt";
+
+		location[7].locName = "Discovery Park";
+		location[7].picName = "discoveryPark.jpg";
+		location[7].north = null;
+		location[7].south = null;
+		location[7].east = "Lily";
+		location[7].west = null;
+		location[7].northeast = "Lawson";
+		location[7].northwest = null;
+		location[7].southeast = null;
+		location[7].southwest = null;
+		location[7].description = "park.txt";
+		location[7].thresh1 = "park_thresh1.txt";
+		location[7].thresh2 = "park_thresh2.txt";
+		location[7].thresh3 = "park_thresh3.txt";
+
+		location[8].locName = "Co-Rec";
+		location[8].picName = "dova.jpg";
+		location[8].north = null;
+		location[8].south = "Discovery Park";
+		location[8].east = "Lawson";
+		location[8].west = null;
+		location[8].northeast = null;
+		location[8].northwest = null;
+		location[8].southeast = null;
+		location[8].southwest = null;
+		location[8].description = "corec.txt";
+		location[8].thresh1 = "corec_thresh1.txt";
+		location[8].thresh2 = "corec_thresh2.txt";
+		location[8].thresh3 = "corec_thresh3.txt";
+
+		location[9].locName = "Ross-Ade";
+		location[9].picName = "rossAide.jpg";
+		location[9].north = null;
+		location[9].south = "P.U.S.H.";
+		location[9].east = null;
+		location[9].west = null;
+		location[9].northeast = null;
+		location[9].northwest = null;
+		location[9].southeast = "Armstrong";
+		location[9].southwest = null;
+		location[9].description = "rossade.txt";
+		location[9].thresh1 = "rossade_thresh1.txt";
+		location[9].thresh2 = "rossade_thresh2.txt";
+		location[9].thresh3 = "rossade_thresh3.txt";
 		new Login();
 	}
 
@@ -868,20 +1020,12 @@ class Game extends Client implements ActionListener, WindowListener
         }else if(pressed.equals(commandField))
 	{
 		String text = commandField.getText();
-		if (text.contains("equip")){
-			String [] array = text.split(" ", 2);
-			equipThis = array[1];
-		}
-		commandResponse.setText(gameLogic(text));
+		String [] commandArray = text.split(" ", 2);
+		//equipThis = commandArray[1];
+		gameLogic(commandArray[0], commandArray[1]);
+		commandResponse.setText(commandArray[0]+ commandArray[1]);
 		commandField.setText("");
-		try{
-			BufferedImage newImage = ImageIO.read(new File("rossAide.jpg"));
-			picLabel.setIcon(new ImageIcon(newImage));
-			picLabel.repaint();
-		}
-		catch(Exception ee){
-			System.out.println("well fuck3");
-		}
+			
 	}
 	else if(pressed.equals(chatTextBox))
 	{
@@ -937,43 +1081,116 @@ class Game extends Client implements ActionListener, WindowListener
     
     
 
+	public String normalize(String input)
+	{
+		char temp[] = input.toCharArray();
+		for(int i = 0; i < temp.length; i++)
+		{
+			if(temp[i] < 97)
+			{
+				temp[i] += 32;
+			}
+		}
+		String output = new String(temp);
+		return output;
+	}
 	/*
 	 * Reads in command line text for commands.....
 	 */
-	public String gameLogic(String command)
+	public String gameLogic(String command, String parameters)
 	{
+		parameters = normalize(parameters);
+		System.out.println(parameters);
 		String response = "";
 		switch(command)
 		{
 			case "move":
 				// Should print out what valid moves a player can make.
 				// Ex: Lawson is to the South. The Union is to the SouthEast
-
-				response = ".";
+				try{
+					String newLoc = parameters+".jpg";
+					System.out.println(newLoc);
+					BufferedImage newLocation = ImageIO.read(new File(newLoc));
+					picLabel.setIcon(new ImageIcon(newLocation));
+					picLabel.repaint();
+				}
+				catch(Exception eee){
+					System.out.println("well fucker");
+				}
 				break;
-			case "move north":
-				response = ".";
+			case "inventory":
+				response = "Items should appear here";
 				break;
-			case "move south":
-				response = ".";
+			case "stats":
+				response = "Stats should appear here";
 				break;
-			case "move east":
-				response = ".";
+			case "attack":
+				// Should be a instance field that keeps track of the player being in a fight or not
+				// if fighting
+				// {
+				// 		dice roll to see if a player hits or misses (they have hit chance
+				// 		dmgDealt = player dmg (Damage + strength)
+				// 		dice roll to see if player crits (player has %crit stat)
+				// 		if crit
+				// 			x2 multiplier
+				//		dmgDealt = dmgDealt - (.5 * armor)
+				//		deal dmg
+				//		response = "You dealt " + dmgDealt + " damage.";
+				//	}
+				//	else
+				//		response = "You are not in combat!";
 				break;
-			case "move west":
-				response = ".";
+			case "flee":
+				// if not in combat
+				// 		response = "You are not in combat!";
+				// else if in Ross Ade
+				// 		response = "There is no escape!";
+				// else
+				// {
+				//		if monster level = 1
+				//		{
+				//			response = "Successfully Escaped";
+				//			in combat = false;
+				//		}
+				//		else if monster level = 2
+				//		{
+				//			int x = random(1 - 4);
+				//			if x < 4
+				//			{
+				//				response = "Successfully Escaped";
+				//				in combat = false;
+				//			}
+				//			else
+				//				response = "Cannot flee!";
+				//		}
+				//		else if monster level = 3
+				//		{
+				//			x = random(1-2);
+				//			if x = 1
+				//			{
+				//				response = "Successfully Escaped";
+				//				in combat = false;
+				//			}
+				//			else
+				//				response = "Cannot flee!";
+				//		}
+				//		else if monster level > 4
+				//			response = "Cannot flee!";
+				// }
 				break;
-			case "move southeast":
-				response = ".";
+			case "where":
+				// retrieval of location name (Haas, LAwson, Ross-Ade)
+				// response = location;
 				break;
-			case "move southwest":
-				response = ".";
-				break;
-			case "move northeast":
-				response = ".";
-				break;
-			case "move northwest":
-				response = ".";
+			case "search":
+				// retreives player int
+				// response = location.description;
+				// if int > threshold 1
+				// 		response += location.thresh1
+				// else if int > thresh 2
+				// 		response += location.thresh2
+				// else if int > thresh 3
+				// 		response += location.thresh3
 				break;
 			case "equip":
 				response = "rm - rf";
@@ -988,3 +1205,47 @@ class Game extends Client implements ActionListener, WindowListener
 
 }
 
+/*
+ * @Location class stores location data
+ */
+class Location
+{
+	String locName;
+	String north;
+	String south;
+	String east;
+	String west;
+	String northeast;
+	String northwest;
+	String southeast;
+	String southwest;
+
+	String description;
+	String picName;
+	// thresh = int threshold a player must meet in order to gain further information.
+	String thresh1;
+	String thresh2;
+	String thresh3;
+}
+
+/*
+ * @List class stores all perminent user data
+ */
+class List implements Serializable
+{
+	String user;
+	String password;
+	String location;
+
+	int health;
+	int strength;
+	int agility;
+	int intelligence;
+	int armor;
+	int critChance;
+	int critModifier;
+	int damage;
+	int hitChance;
+	boolean loggedIn;
+	int[] inventory = new int[102];
+}
