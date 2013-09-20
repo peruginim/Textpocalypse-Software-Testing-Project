@@ -870,7 +870,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[0][5] = null;
 		location[0][6] = "Armstrong";
 		location[0][7] = null;
-		location[0][8] = null;
+		location[0][8] = "Elliot";
 		location[0][9] = "Lawson";
 		location[0][10] = "push.txt";
 		location[0][11] = "push_thresh1.txt";
@@ -885,7 +885,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[1][4] = null;
 		location[1][5] = null;
 		location[1][6] = null;
-		location[1][7] = null;
+		location[1][7] = "Ross-Ade";
 		location[1][8] = "Engineering Mall";
 		location[1][9] = "P.U.S.H.";
 		location[1][10] = "armstrong.txt";
@@ -915,7 +915,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[3][4] = "Union";
 		location[3][5] = "Lawson";
 		location[3][6] = "Engineering Mall";
-		location[3][7] = null;
+		location[3][7] = "P.U.S.H.";
 		location[3][8] = null;
 		location[3][9] = "Lily";
 		location[3][10] = "elliot.txt";
@@ -963,7 +963,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[6][6] = "Elliot";
 		location[6][7] = null;
 		location[6][8] = null;
-		location[6][9] = "Lawson";
+		location[6][9] = null;
 		location[6][10] = "lily.txt";
 		location[6][11] = "lily_thresh1.txt";
 		location[6][12] = "lily_thresh2.txt";
@@ -972,7 +972,7 @@ class Game extends Client implements ActionListener, WindowListener
 
 		location[7][0] = "Discovery Park";
 		location[7][1] = "discoveryPark.jpg";
-		location[7][2] = null;
+		location[7][2] = "Co-Rec";
 		location[7][3] = null;
 		location[7][4] = "Lily";
 		location[7][5] = null;
@@ -1373,16 +1373,11 @@ class Game extends Client implements ActionListener, WindowListener
 				   System.out.println("well fucker");
 				   }
 				   */
-				System.out.println("Before North");
 				if(parameters.equals("north"))
 				{
-					System.out.println("After North");
 					String local = userStats.location;
-					System.out.println(local);
 					int index = parseLocations(local);
-					System.out.println(index);
 					String north = location[index][2];
-					System.out.println(north);
 					if(north == null)
 						response = "There is nothing to the North.";
 					else
@@ -1390,6 +1385,192 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + north;
 						userStats.location = north;
 						sendLocation();
+						try
+						{
+							index = parseLocations(north);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("south"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String south = location[index][3];
+					if(south == null)
+						response = "There is nothing to the South.";
+					else
+					{
+						response = "Moving to " + south;
+						userStats.location = south;
+						sendLocation();
+						try
+						{
+							index = parseLocations(south);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("east"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String east = location[index][4];
+					if(east == null)
+						response = "There is nothing to the East.";
+					else
+					{
+						response = "Moving to " + east;
+						userStats.location = east;
+						sendLocation();
+						try
+						{
+							index = parseLocations(east);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("west"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String west = location[index][5];
+					if(west == null)
+						response = "There is nothing to the West.";
+					else
+					{
+						response = "Moving to " + west;
+						userStats.location = west;
+						sendLocation();
+						try
+						{
+							index = parseLocations(west);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("northeast"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String northeast = location[index][6];
+					if(northeast == null)
+						response = "There is nothing to the NorthEast.";
+					else
+					{
+						response = "Moving to " + northeast;
+						userStats.location = northeast;
+						sendLocation();
+						try
+						{
+							index = parseLocations(northeast);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("northwest"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String northwest = location[index][7];
+					if(northwest == null)
+						response = "There is nothing to the NorthWest.";
+					else
+					{
+						response = "Moving to " + northwest;
+						userStats.location = northwest;
+						sendLocation();
+						try
+						{
+							index = parseLocations(northwest);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("southeast"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String southeast = location[index][8];
+					if(southeast == null)
+						response = "There is nothing to the SouthEast.";
+					else
+					{
+						response = "Moving to " + southeast;
+						userStats.location = southeast;
+						sendLocation();
+						try
+						{
+							index = parseLocations(southeast);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
+					}
+				}
+				else if(parameters.equals("southwest"))
+				{
+					String local = userStats.location;
+					int index = parseLocations(local);
+					String southwest = location[index][9];
+					if(southwest == null)
+						response = "There is nothing to the SouthWest.";
+					else
+					{
+						response = "Moving to " + southwest;
+						userStats.location = southwest;
+						sendLocation();
+						try
+						{
+							index = parseLocations(southwest);
+							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+							picLabel.setIcon(new ImageIcon(newLocation));
+							picLabel.repaint();
+						}
+						catch(Exception e)
+						{
+							System.out.println("Error with Map");
+						}
 					}
 				}
 				else
