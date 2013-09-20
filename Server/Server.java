@@ -4,11 +4,13 @@ import java.io.*;
 public class Server extends Thread
 { 
 	public static List[] userList;
-	public static int index;
+	public static Integer index;
  	protected Socket clientSocket;
 
 	public boolean handleRequest(String user, String pass, int message)
 	{
+		//serialize();
+		//deserialize();
 		switch(message)
 		{
 			//Login
@@ -21,6 +23,7 @@ public class Server extends Thread
 						{
 							if(userList[i].loggedIn == false)
 							{
+								System.out.println("case 2: ");
 								userList[i].loggedIn = true;
 								return true;
 							}
@@ -59,6 +62,7 @@ public class Server extends Thread
 					if(userList[i].user.equals(user))
 					{
 						userList[i].loggedIn = false;
+						serialize();
 						return true;
 					}
 				}
@@ -80,22 +84,31 @@ public class Server extends Thread
 		
 		for (int x=0; x<index; x++)
 		{
-		
 			System.out.println("List to serialize...");
 			System.out.println("User: " + userList[x].user);
 			System.out.println("Password: " + userList[x].password);
 			System.out.println("Location: " + userList[x].location);
 			System.out.println("Logged in: " + userList[x].loggedIn);
+			System.out.println("Index is: " + index);
 		}
 		
 		try
   		{
+  			// save list array
   			FileOutputStream fileOut = new FileOutputStream("playerdata.ser");
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
  	 		out.writeObject(userList);
  			out.close();
  			fileOut.close();
 			System.out.println("Serialized data is saved in playerdata.ser");
+			
+			// save index
+			FileOutputStream fileOut2 = new FileOutputStream("index.ser");
+			ObjectOutputStream out2 = new ObjectOutputStream(fileOut2);
+			out2.writeObject(index);
+ 			out2.close();
+ 			fileOut2.close();
+			System.out.println("Serialized data is saved in index.ser");
  		}
  		catch(IOException e)
 	 	{
@@ -110,18 +123,27 @@ public class Server extends Thread
  * Deserialize loads from disk the saved instance of the player database
  *
  */
-	public void deserialize(){
+	public static void deserialize(){
 	
 		System.out.println("DESERIALIZE!");
 		
-    	userList = null;
      	try
       	{
+      		// open list array
+      		System.out.println(">>> opening playerdata.ser");
         	FileInputStream fileIn = new FileInputStream("playerdata.ser");
        		ObjectInputStream in = new ObjectInputStream(fileIn);
          	userList = (List[]) in.readObject();
          	in.close();
 		    fileIn.close();
+		    
+		    //open index
+		    System.out.println(">>> opening index.ser");
+        	FileInputStream fileInn = new FileInputStream("index.ser");
+       		ObjectInputStream inn = new ObjectInputStream(fileInn);
+       		index = (Integer) inn.readObject();
+         	inn.close();
+		    fileInn.close();
 		}catch(IOException i)
 		{
 			i.printStackTrace();
@@ -134,12 +156,20 @@ public class Server extends Thread
 		}
 		for (int x=0; x<index; x++)
 		{
-		
-			System.out.println("Deserialized List...");
-			System.out.println("User: " + userList[x].user);
-			System.out.println("Password: " + userList[x].password);
-			System.out.println("Location: " + userList[x].location);
-			System.out.println("Logged in: " + userList[x].loggedIn);
+			try 
+			{
+				System.out.println(">>> INDEX");
+				System.out.println("Deserialized List...");
+				System.out.println("User: " + userList[x].user);
+				System.out.println("Password: " + userList[x].password);
+				System.out.println("Location: " + userList[x].location);
+				System.out.println("Logged in: " + userList[x].loggedIn);
+				System.out.println("Index is: " + index);
+			}catch(Exception e)
+			{
+				System.out.println("empty list");
+			}
+				
 		}
 	}	
 	
@@ -147,8 +177,17 @@ public class Server extends Thread
   	{ 
 	index = 0;
 	userList = new List[100];
-    	ServerSocket serverSocket = null; 
-
+    	ServerSocket serverSocket = null;
+    	
+    	File ind = new File("index.ser");
+    	File pd = new File("playerdata.ser");
+    	if( pd.createNewFile() && ind.createNewFile() ){
+    		System.out.println("creating player data files");
+    	}else
+    	{
+			deserialize();
+		}
+			
    		try { 
         	serverSocket = new ServerSocket(4444); 
        		System.out.println ("Connection Socket Created");
