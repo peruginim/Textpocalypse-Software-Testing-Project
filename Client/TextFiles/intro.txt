@@ -7,6 +7,8 @@ be of use to you:
 
 'move X' - moves your character in X direction. Valid directions are north, 
               south, east, west, northwest, northwest, southwest, southeast
+
+'move show' - show surrounding areas
 	     
 'search area' - provides you with information about your surrounding area
 
