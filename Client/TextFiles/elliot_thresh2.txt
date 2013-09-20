@@ -1,0 +1,2 @@
+The closer you get, the more you notice about the circle in the middle of the
+stage. It glows green, pulsating slowly but steadily.

@@ -1,0 +1,5 @@
+Welcome to textpocalypse. Please familiarise yourself with all of the commands
+in the game, which can be found in the Instructions section. You will notice a
+chat that can be used to communicate with other players. Below this text is a
+command line where you can enter in those amazing commands you've read about
+in the Instructions. Good Luck and Have Fun!
