@@ -1,31 +1,28 @@
-Welcome to Purdue "brave" Adventurer! You are about to begin a journey the
-likes of which you have never seen, unless you have played video games prior
-to this one. In that case you've probably seen better but if this is your
-first time you will be amazed! This world is inhabited by players just like
-you, trying to live without being eaten by some crazy five headed battle toad
-or something like that. In order to survive you will need to gather weapons
-and supplies to aid you. Here are some commands that should be of use to you:
+Welcome to Purdue, brave adventurer! You are about to begin a journey the
+likes of which you have never seen, set in a familiar yet post-apocalyptic 
+college campus.  This world is inhabited by players just like you, trying 
+to survive and avoid bloodthirsty monsters. In order to survive you need to 
+gather weapons and supplies to aid you. Here are some commands that should 
+be of use to you:
 
-move X - moves your character depending on what direction you choose. You can use any direction (move north, move
-southeast) as long as it is a valid move. 
+'move X' - moves your character in X direction. Valid directions are north, 
+              south, east, west, northwest, northwest, southwest, southeast
+	     
+'search area' - provides you with information about your surrounding area
 
-search area - provides you with information about your surrounding area
+'inventory' - lists items in the player's inventory
 
-inventory - lists out what items are in the player's inventory
+'attack' - attempt to attack an enemy
 
-who - lists players that are on the same spot as you
+'flee' - attempt to run from an enemy
 
-attack - attempt to attack an enemy
+'stats' - lists player's stats
 
-flee - attempt to run from an enemy
+'where' - tells the player their current location
 
-stats - lists player's stats
-
-where - tells the player their current location
-
-equip X - equips the item X to a useable slot. If the item is a weapon it will
-be equiped in the weapon slot. If there was already a weapon in the weapon
-slot, it will be replaced by X. There is a weapon slot, a head slot, and a
-body slot.
-
-equipped - tells the player what is equiped.
+'equip X' - equips item X to a usable slot. If the item is a weapon it will
+            be equipped in the weapon slot. If there was already a weapon in 
+            the weapon slot, it will be replaced by X. There is a weapon slot, 
+            a head slot, and a body slot.
+	      	
+'equipped' - tells the player what is equipped.

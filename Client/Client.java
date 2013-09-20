@@ -639,8 +639,8 @@ class CreateNewUser extends Client implements ActionListener
 
 	public void createPanels()
 	{
-		//createUser Panel
 		createUserPanel = new JPanel(new GridLayout(9, 1));
+		
 		createUserPanel.add(usernameText);
 		createUserPanel.add(usernameTextBox);
 		createUserPanel.add(passwordText);
@@ -675,7 +675,7 @@ class CreateNewUser extends Client implements ActionListener
 		passwordTextBox = new JPasswordField();
 		password2TextBox = new JPasswordField();
 		verificationText = new JTextField();
-		verificationText.setText("Confirm or deny user creation in this textbox");
+		verificationText.setText("");
 		verificationText.setEditable(false);
 	}
 
@@ -695,7 +695,7 @@ class CreateNewUser extends Client implements ActionListener
 			String pass2 = new String(temp2);
 			if(!(pass.equals(pass2)))
 			{
-				verificationText.setText("The passwords you entered do not match");
+				verificationText.setText("The passwords you entered do not match!");
 			}else
 			{
 				try{
@@ -716,7 +716,7 @@ class CreateNewUser extends Client implements ActionListener
 					}else
 					{
 						//Username was taken
-						verificationText.setText("The Username selected has been taken!");
+						verificationText.setText("This username has been taken!");
 					}
 				}catch(Exception excep)
 				{
@@ -890,7 +890,8 @@ class Instructions extends Client implements ActionListener
 
 	//Instructions Frame
 	JButton exitButton;
-	JLabel howtoPlayText;
+	JTextArea howtoPlayText;
+	JScrollPane scroll;
 
 	public static void main(String[] args)
 	{
@@ -907,11 +908,11 @@ class Instructions extends Client implements ActionListener
 	public void createFrame()
 	{
 		instructFrame = new JFrame("Textpocalypse: Purdue -- INSTRUCTIONS");
-		instructFrame.setLayout(new GridLayout(2,1));
-		instructFrame.setSize(500, 200);
+		instructFrame.setLayout(new BorderLayout());
+		instructFrame.setSize(500, 400);
 
-		instructFrame.add(howtoPlayText);
-		instructFrame.add(exitButton);
+		instructFrame.add(scroll, BorderLayout.CENTER);
+		instructFrame.add(exitButton, BorderLayout.PAGE_END);
 
 		instructFrame.setResizable(false);
 		instructFrame.setLocationRelativeTo(null);
@@ -922,12 +923,33 @@ class Instructions extends Client implements ActionListener
 
 	public void createLabels()
 	{
-		howtoPlayText = new JLabel("A bunch of shit");
+	    try {
+    	  BufferedReader br = new BufferedReader(new FileReader("./TextFiles/intro.txt"));
+      	  StringBuilder sb = new StringBuilder();
+      	  String line = br.readLine();
+
+       	  while (line != null) {
+          	sb.append(line);
+            sb.append('\n');
+            line = br.readLine();
+          }
+          String everything = sb.toString();
+          howtoPlayText = new JTextArea(everything);
+          br.close();
+          howtoPlayText.setLineWrap(true);
+          howtoPlayText.setEditable(false);
+          scroll = new JScrollPane(howtoPlayText);
+		  scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		  scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        } catch (Exception e) {
+        	howtoPlayText = new JTextArea("Error reading instructions file");
+        	System.out.println("Error reading instructions file");
+        }
 	}
 
 	public void createButtons()
 	{
-		exitButton = new JButton("Back");
+		exitButton = new JButton("Close Instructions");
 		exitButton.addActionListener(this);
 	}
 
