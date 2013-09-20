@@ -826,6 +826,7 @@ class Game extends Client implements ActionListener, WindowListener
     	String equippedWeapon;
 	public static String[][] location;
 	public static boolean isFighting;
+	public static int monHealth;
 
 	//GameFrame
 	JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
@@ -863,6 +864,7 @@ class Game extends Client implements ActionListener, WindowListener
 
 	public void createWeapons()
     	{
+		monHealth = 4;
 		inventIndex = userStats.inventIndex;
 		equippedArmor = null;
 		equippedWeapon = null;
@@ -942,7 +944,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[1][5] = null;
 		location[1][6] = null;
 		location[1][7] = "Ross-Ade";
-		location[1][8] = "Engineering Mall";
+		location[1][8] = "The Engineering Mall";
 		location[1][9] = "P.U.S.H.";
 		location[1][10] = "armstrong.txt";
 		location[1][11] = "armstrong_thresh1.txt";
@@ -954,7 +956,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[2][2] = null;
 		location[2][3] = "Lily";
 		location[2][4] = "Elliot";
-		location[2][5] = "Co-Rec";
+		location[2][5] = "The Co-Rec";
 		location[2][6] = "P.U.S.H.";
 		location[2][7] = null;
 		location[2][8] = null;
@@ -968,9 +970,9 @@ class Game extends Client implements ActionListener, WindowListener
 		location[3][1] = "Elliot.jpg";
 		location[3][2] = "Armstrong";
 		location[3][3] = null;
-		location[3][4] = "Union";
+		location[3][4] = "The Union";
 		location[3][5] = "Lawson";
-		location[3][6] = "Engineering Mall";
+		location[3][6] = "The Engineering Mall";
 		location[3][7] = "P.U.S.H.";
 		location[3][8] = null;
 		location[3][9] = "Lily";
@@ -979,7 +981,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[3][12] = "elliot_thresh2.txt";
 		location[3][13] = "elliot_thresh3.txt";
 
-		location[4][0] = "Engineering Mall";
+		location[4][0] = "The Engineering Mall";
 		location[4][1] = "engineeringMall.jpg";
 		location[4][2] = null;
 		location[4][3] = null;
@@ -987,7 +989,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[4][5] = null;
 		location[4][6] = null;
 		location[4][7] = "Armstrong";
-		location[4][8] = "Union";
+		location[4][8] = "The Union";
 		location[4][9] = "Elliot";
 		location[4][10] = "engmall.txt";
 		location[4][11] = "engmall_thresh1.txt";
@@ -995,14 +997,14 @@ class Game extends Client implements ActionListener, WindowListener
 		location[4][13] = "engmall_thresh3.txt";
 
 
-		location[5][0] = "Union";
+		location[5][0] = "The Union";
 		location[5][1] = "stunion.jpg";
 		location[5][2] = null;
 		location[5][3] = null;
 		location[5][4] = null;
 		location[5][5] = "Elliot";
 		location[5][6] = null;
-		location[5][7] = "Engineering Mall";
+		location[5][7] = "The Engineering Mall";
 		location[5][8] = null;
 		location[5][9] = null;
 		location[5][10] = "union.txt";
@@ -1028,7 +1030,7 @@ class Game extends Client implements ActionListener, WindowListener
 
 		location[7][0] = "Discovery Park";
 		location[7][1] = "discoveryPark.jpg";
-		location[7][2] = "Co-Rec";
+		location[7][2] = "The Co-Rec";
 		location[7][3] = null;
 		location[7][4] = "Lily";
 		location[7][5] = null;
@@ -1041,7 +1043,7 @@ class Game extends Client implements ActionListener, WindowListener
 		location[7][12] = "park_thresh2.txt";
 		location[7][13] = "park_thresh3.txt";
 
-		location[8][0] = "Co-Rec";
+		location[8][0] = "The Co-Rec";
 		location[8][1] = "dova.jpg";
 		location[8][2] = null;
 		location[8][3] = "Discovery Park";
@@ -1219,9 +1221,9 @@ class Game extends Client implements ActionListener, WindowListener
 				//equipThis = commandArray[1];
 				System.out.println(commandArray[0] + " " + commandArray[1]);
 				String response = gameLogic(commandArray[0], commandArray[1]);
-				commandResponse.append(response+"\n");
+				commandResponse.setText(response+"\n");
 			}catch(Exception except){
-				commandResponse.append("Invalid use. Please enter a command followed by parameters\n");
+				commandResponse.setText("Invalid use. Please enter a command followed by parameters\n");
 			}
 			commandField.setText("");
 
@@ -1378,11 +1380,11 @@ class Game extends Client implements ActionListener, WindowListener
 				break;
 		return i;
 	}
-	public void redraw(int index, String local)
+	public void redraw(String local)
 	{
 		try
 		{
-			index = parseLocations(local);
+			int index = parseLocations(local);
 			BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
 			picLabel.setIcon(new ImageIcon(newLocation));
 			picLabel.repaint();
@@ -1418,7 +1420,7 @@ class Game extends Client implements ActionListener, WindowListener
 		}else if(itemToEquip < 10)
 		{
 			equippedWeapon = s;
-			userStats.strength += Integer.parseInt(weaponArray[itemToEquip][2]);
+			userStats.strength = 1 + Integer.parseInt(weaponArray[itemToEquip][2]);
 			userStats.damage = 1 + userStats.strength;
 			sendDamage();
 		}
@@ -1467,7 +1469,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + north;
 						userStats.location = north;
 						sendLocation();
-						redraw(index, north);
+						redraw(north);
 					}
 				}
 				else if(parameters.equals("south"))
@@ -1482,7 +1484,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + south;
 						userStats.location = south;
 						sendLocation();
-						redraw(index, south);
+						redraw(south);
 					}
 				}
 				else if(parameters.equals("east"))
@@ -1497,7 +1499,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + east;
 						userStats.location = east;
 						sendLocation();
-						redraw(index, east);
+						redraw(east);
 					}
 				}
 				else if(parameters.equals("west"))
@@ -1512,7 +1514,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + west;
 						userStats.location = west;
 						sendLocation();
-						redraw(index, west);
+						redraw(west);
 					}
 				}
 				else if(parameters.equals("northeast"))
@@ -1527,7 +1529,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + northeast;
 						userStats.location = northeast;
 						sendLocation();
-						redraw(index, northeast);
+						redraw(northeast);
 					}
 				}
 				else if(parameters.equals("northwest"))
@@ -1542,7 +1544,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + northwest;
 						userStats.location = northwest;
 						sendLocation();
-						redraw(index, northwest);
+						redraw(northwest);
 					}
 				}
 				else if(parameters.equals("southeast"))
@@ -1557,7 +1559,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + southeast;
 						userStats.location = southeast;
 						sendLocation();
-						redraw(index, southeast);
+						redraw(southeast);
 					}
 				}
 				else if(parameters.equals("southwest"))
@@ -1572,7 +1574,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + southwest;
 						userStats.location = southwest;
 						sendLocation();
-						redraw(index, southwest);
+						redraw(southwest);
 					}
 				}
 				else if(parameters.equals("show"))
@@ -1619,21 +1621,76 @@ class Game extends Client implements ActionListener, WindowListener
 			case "attack":
 				if(parameters.equals("monster"))
 				{
-				// Should be a instance field that keeps track of the player being in a fight or not
 					if(isFighting)
-				 	{
-				// 		dice roll to see if a player hits or misses (they have hit chance
-				// 		dmgDealt = player dmg (Damage + strength)
-				// 		dice roll to see if player crits (player has %crit stat)
-				// 		if crit
-				// 			x2 multiplier
-				//		dmgDealt = dmgDealt - (.5 * armor)
-				//		deal dmg
-				//		response = "You dealt " + dmgDealt + " damage.";
-				//
+					{
+						// 		dice roll to see if a player hits or misses (they have hit chance
+						// 		dmgDealt = player dmg (Damage + strength)
+						// 		dice roll to see if player crits (player has %crit stat)
+						// 		if crit
+						// 			x2 multiplier
+						//		dmgDealt = dmgDealt - (.5 * armor)
+						//		deal dmg
+						//		response = "You dealt " + dmgDealt + " damage.";
+						//
+						// read monster stats
+
+
+
+						//int monDamage = monsterdamage-.5*userStats.armor;
+							int monArmor = 4;
+							int tempMon = (int) (.5*userStats.armor);
+							int monDamage = 4 - tempMon;
+			
+							
+							int tempPlay = (int) (.5*monArmor);
+							int playerDamage = userStats.damage - tempPlay;
+						if(monHealth > 0 && userStats.health > 0){
+							Random generator = new Random();
+                                                        int monRoll = generator.nextInt(100) + 1;
+							int playerRoll = generator.nextInt(100)+1;
+							int playerHit = (int) (userStats.hitChance*1)*100;
+							//int monHit = (monStats.hitChance*1)*100;
+							if(playerRoll >= playerHit){
+								int crit = generator.nextInt(100)+1;
+								if(crit <= (int)(100*userStats.critChance)) playerDamage = 2*playerDamage;
+								monHealth = monHealth - playerDamage;
+							}else{
+								System.out.println("You missed");
+								playerDamage = 0;
+							}
+							//if(monRoll >= monHit){
+							userStats.health = userStats.health - monDamage;
+							//}else monDamage = 0;
+							// OPTIONAL add message for missing attacks
+							if(monHealth <= 0) {
+								System.out.println("Monster should be dead");
+								monHealth = 4;
+								userStats.health = userStats.health + monDamage;
+								response = "You do " + playerDamage + " damage killing the monster!\n You have "+ userStats.health + " health left.\n";
+								isFighting = false;
+							}else if (userStats.health <= 0){
+								userStats.health = userStats.health - monDamage;
+								response = "You were hit for " + monDamage + " and were killed by the monster.";
+								isFighting = false;
+								//call respawn stuff
+								userStats.strength = 1;
+								sendStr();
+								userStats.armor = 0;
+								sendArmor();
+								userStats.health = 10;
+								sendHealth();
+								userStats.location = "P.U.S.H.";
+								sendLocation();
+								redraw(userStats.location);
+							}else{
+								response = "You do " + playerDamage + " damage! \n The monster has " + monHealth + " health left.\n" + "You are attacked for " + monDamage + " damage and have " + userStats.health + " health left.\n";
+							}
+						}
 					}else{
-					response = "You are not in combat!";
+						response = "You are not in combat!";
 					}
+				}else{
+					response = "Try 'attack monster'";
 				}
 
 				break;
@@ -1677,31 +1734,83 @@ class Game extends Client implements ActionListener, WindowListener
 				//		}
 				//		else if monster level > 4
 				//			response = "Cannot flee!";
+					isFighting = false;
+					response = "You got away!";
 					}
 				}
 				break;
 			case "where":
-				// retrieval of location name (Haas, LAwson, Ross-Ade)
+				// retrieval of location name (Haas, Lawson, Ross-Ade)
 				//if(parameters.equals(null));
-				if(parameters.equals("show")) response = userStats.location;
+				if(parameters.equals("show")) response = "You are in " + userStats.location;
 				break;
 			case "search":
 				if(parameters.equals("area"))
 				{
+
 					if(isFighting){
-						response = "You are currently engaged in battle!";
-						break;
-					}
+						response = "You cannot search while fighting!";
+					}else{
 
-					Random generator = new Random();
-					int roll = generator.nextInt(10) + 1;
-					//System.out.println("$$$$ "+roll);
-					if (roll <= 4)
-					{
-						isFighting = true;
-						response = "A monster has engaged you in battle!";
-					}
 
+						Random generator = new Random();
+						int roll = generator.nextInt(10) + 1;
+						//System.out.println("$$$$ "+roll);
+						if (roll <= 4)
+						{
+							isFighting = true;
+							response = "A monster has engaged you in battle!";
+						}else if(roll > 4 && roll <= 6){
+							response = "You found an item";
+							System.out.println("weaponfound");
+							//find an item
+							boolean found = false;
+							while(!found){
+								int newItem = generator.nextInt(14);
+								System.out.println(newItem);
+								int newWep = Integer.parseInt(weaponArray[newItem][1]);
+								int i = 0;
+								for(;i < userStats.inventory.length ;i++){
+									if(userStats.inventory[i] != newWep) {
+										found = true;
+										break;
+									}
+								}
+								if(found){
+									userStats.inventory[inventIndex++] = newWep;
+									sendInvent();
+									break;
+								}
+							}
+						}else{
+							String resp = "";
+							String locName = "";
+							try{
+								String locate =  userStats.location;
+								int i = 0;
+								for(; i <= 9; i++){
+									if(location[i][0].equals(locate)){
+										locName = location[i][10];
+										break;
+									}
+									else{}
+								}
+								BufferedReader br = new BufferedReader(new FileReader("./TextFiles/"+locName));
+								StringBuilder sb = new StringBuilder();
+								String everything = br.readLine();
+								while(everything != null){
+									sb.append(everything);
+									sb.append('\n');
+									everything = br.readLine();
+								}
+								resp = sb.toString();
+								br.close();
+							}catch(Exception nf){
+								System.out.println("Can't find file"+ " " + "./TextFiles/"+ locName+ ".txt");
+							}
+							response = resp;
+						}
+					}
 
 				}
 				// retreives player int
