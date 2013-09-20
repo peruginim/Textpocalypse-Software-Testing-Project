@@ -280,6 +280,10 @@ public class Server extends Thread
 				}catch(Exception eblah){
 					System.out.println(eblah);
 				}
+			}else if(Integer.parseInt(parsedCommand[2]) == 0)
+			{
+				List returnList = handleList(parsedCommand[0]);
+				returnList.location = parsedCommand[1];
 				
 			}else if(Integer.parseInt(parsedCommand[2]) == 6)
 			{

@@ -239,6 +239,12 @@ public abstract class Client extends Thread implements Runnable
         
         switch(message)
         {
+		//Send Location
+		case 0:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
         	//Startup
        		case 1:
        			//out.println("starting new client");
@@ -1157,6 +1163,15 @@ class Game extends Client implements ActionListener, WindowListener
     public void windowStateChanged(WindowEvent e) {
     }
     
+	public void sendLocation()
+	{
+		String temp = userStats.location;
+		try{
+			boolean sendLocation = connectToServer(currentUser, temp, 0);
+		}catch(Exception e){
+
+		}
+	}
     
 	public void sendInvent()
 	{
