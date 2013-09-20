@@ -1062,7 +1062,11 @@ class Game extends Client implements ActionListener, WindowListener
 		//This will be decided Later
 		mapPanel = new JPanel(new BorderLayout());
 		try{
-			myPicture = ImageIO.read(new File("PUSH.jpg"));
+			
+			//myPicture = ImageIO.read(new File("PUSH.jpg"));
+			int index = parseLocations(userStats.location);
+			System.out.println("index is ... " + index);
+			myPicture = ImageIO.read(new File(location[index][1]));
 		}catch(Exception e){
 			System.out.println("wellfuck2");
 		}
@@ -1084,7 +1088,8 @@ class Game extends Client implements ActionListener, WindowListener
 	public void createLabels()
 	{
 		currentUserLabel = new JLabel("Current User:  " + currentUser);
-		commandResponse = new JTextArea("Enter Command");
+		commandResponse = new JTextArea("Enter Command\n");
+		commandResponse.append("You are currently located in " + userStats.location +"\n");
 		commandResponse.setLineWrap(true);
 		commandResponse.setEditable(false);
 		scroll = new JScrollPane(commandResponse);
@@ -1156,9 +1161,9 @@ class Game extends Client implements ActionListener, WindowListener
 				//equipThis = commandArray[1];
 				System.out.println(commandArray[0] + " " + commandArray[1]);
 				String response = gameLogic(commandArray[0], commandArray[1]);
-				commandResponse.setText(response);
+				commandResponse.append(response+"\n");
 			}catch(Exception except){
-				commandResponse.setText("Invalid use. Please enter a command followed by parameters");
+				commandResponse.append("Invalid use. Please enter a command followed by parameters\n");
 			}
 			commandField.setText("");
 
@@ -1313,6 +1318,21 @@ class Game extends Client implements ActionListener, WindowListener
 			if(location[i][0].equals(s))
 				break;
 		return i;
+		/*
+		   System.out.println("Passing in s: " + s );
+		   System.out.println(location[0].locName);
+		   int ret=0;
+		   for(int i=0; i<10; i++)
+		   {
+		   System.out.println("Locations: " + location[0].locName);
+		   if(location[i].locName.equals(s))
+		   {
+		   ret = i;
+		   }
+		   }
+
+		   return ret;
+		   */
 	}
 	public String normalize(String input)
 	{
@@ -1345,6 +1365,27 @@ class Game extends Client implements ActionListener, WindowListener
 		switch(command)
 		{
 			case "move":
+				// Should print out what valid moves a player can make.
+				// Ex: Lawson is to the South. The Union is to the SouthEast
+				/*
+				   try{
+				   String newLoc = parameters+".jpg";
+				   System.out.println(newLoc);
+				   BufferedImage newLocation = ImageIO.read(new File(newLoc));
+				   picLabel.setIcon(new ImageIcon(newLocation));
+				   picLabel.repaint();
+				   }
+				   catch(Exception eee){
+				   System.out.println("well fucker");
+				   }
+				   */
+				   
+				if(isFighting)
+				{
+					response = "You are currently engaged in battle! You can attack or flee.";
+					break;
+				}
+				   
 				if(parameters.equals("north"))
 				{
 					String local = userStats.location;
@@ -1548,7 +1589,7 @@ class Game extends Client implements ActionListener, WindowListener
 				else if(parameters.equals("show"))
 				{
 					String local = userStats.location;
-					response = "Locations surrounding " + local + ": ";
+					response = "Surrounding Locations:  " + local + " ";
 					int index = parseLocations(local);
 					for(int i = 2; i < 10; i++)
 						if(location[index][i] != null)
@@ -1564,9 +1605,11 @@ class Game extends Client implements ActionListener, WindowListener
 				response = "Stats should appear here";
 				break;
 			case "attack":
+				if(parameters.equals("monster"))
+				{
 				// Should be a instance field that keeps track of the player being in a fight or not
-				 if(isFighting)
-				 {
+					if(isFighting)
+				 	{
 				// 		dice roll to see if a player hits or misses (they have hit chance
 				// 		dmgDealt = player dmg (Damage + strength)
 				// 		dice roll to see if player crits (player has %crit stat)
@@ -1575,21 +1618,24 @@ class Game extends Client implements ActionListener, WindowListener
 				//		dmgDealt = dmgDealt - (.5 * armor)
 				//		deal dmg
 				//		response = "You dealt " + dmgDealt + " damage.";
-				//
-				}else{
+				//	
+					}else{
 					response = "You are not in combat!";
+					}
 				}
-
+				
 				break;
 			case "flee":
-				//if(!isFighting)
-				//{
-				 //		response = "You are not in combat!";
-				//}
+				if(parameters.equals("monster"))
+				{
+					if(!isFighting)
+					{
+				 		response = "You are not in combat!";
+					}
 				// else if in Ross Ade
 				// 		response = "There is no escape!";
-				//else
-				//{
+					else
+					{
 				//		if monster level = 1
 				//		{
 				//			response = "Successfully Escaped";
@@ -1619,7 +1665,8 @@ class Game extends Client implements ActionListener, WindowListener
 				//		}
 				//		else if monster level > 4
 				//			response = "Cannot flee!";
-				// }
+					}
+				}
 				break;
 			case "where":
 				// retrieval of location name (Haas, LAwson, Ross-Ade)
@@ -1633,15 +1680,16 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "You are currently engaged in battle!";
 						break;
 					}
-
+				
 					Random generator = new Random();
 					int roll = generator.nextInt(10) + 1;
 					//System.out.println("$$$$ "+roll);
 					if (roll <= 4)
 					{
-						isFighting = true;
+						isFighting = true; 	
 						response = "A monster has engaged you in battle!";
 					}
+					
 
 				}
 				// retreives player int
@@ -1663,7 +1711,7 @@ class Game extends Client implements ActionListener, WindowListener
 		}
 		return response;
 	}
-
+	
 	//playerSearch is the act of searching in game. it determines if a monster attacks
 
 
