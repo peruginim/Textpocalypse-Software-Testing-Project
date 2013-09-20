@@ -1574,6 +1574,15 @@ class Game extends Client implements ActionListener, WindowListener
 						}
 					}
 				}
+				else if(parameters.equals("show"))
+				{
+					String local = userStats.location;
+					response = "Locations surrounding " + local + ": ";
+					int index = parseLocations(local);
+					for(int i = 2; i < 10; i++)
+						if(location[index][i] != null)
+							response += location[index][i] + " ";
+				}
 				else
 					response = "Not a valid move. Ex: 'move south' or 'move northwest'";
 				break;
