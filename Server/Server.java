@@ -201,10 +201,12 @@ public class Server extends Thread
     	
     	File ind = new File("index.ser");
     	File pd = new File("playerdata.ser");
-    	if( pd.createNewFile() && ind.createNewFile() ){
+    	if( pd.createNewFile() ){
+		ind.createNewFile();
     		System.out.println("creating player data files");
     	}else
     	{
+			System.out.println("Blah");
 			deserializeFromFile();
 		}
 			
@@ -254,11 +256,13 @@ public class Server extends Thread
     	System.out.println ("New Communication Thread Started");
 
     	try { 
-       	 	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
+		OutputStream os = clientSocket.getOutputStream();
+       	 	PrintWriter out = new PrintWriter(os, 
                                       true); 
         	BufferedReader in = new BufferedReader( 
                  new InputStreamReader( clientSocket.getInputStream())); 
-
+		
+		ObjectOutputStream outStream = new ObjectOutputStream(os);
         	String inputLine; 
 
         	while ((inputLine = in.readLine()) != null) 
@@ -272,7 +276,6 @@ public class Server extends Thread
 				returnList = handleList(parsedCommand[0]);
 				//send object back to client
 				try{
-					ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
 					outStream.writeObject(returnList);
 				}catch(Exception eblah){
 					System.out.println(eblah);
@@ -319,15 +322,15 @@ class List implements Serializable
 	String password;
 	String location;
 	
-	int health;
-	int strength;
-	int agility;
-	int intelligence;
-	int armor;
-	int critChance;
-	int critModifier;
-	int damage;
-	int hitChance;
+	int health = 10;
+	int strength = 1;
+	int agility = 1;
+	int intelligence = 1;
+	int armor = 0;
+	double critChance = 0.05;
+	int critModifier = 2;
+	int damage = 1 + strength;
+	double hitChance = 0.9;
 	boolean loggedIn;
 	int [] inventory = new int[102];
 }
