@@ -1313,21 +1313,6 @@ class Game extends Client implements ActionListener, WindowListener
 			if(location[i][0].equals(s))
 				break;
 		return i;
-		/*
-		   System.out.println("Passing in s: " + s );
-		   System.out.println(location[0].locName);
-		   int ret=0;
-		   for(int i=0; i<10; i++)
-		   {
-		   System.out.println("Locations: " + location[0].locName);
-		   if(location[i].locName.equals(s))
-		   {
-		   ret = i;
-		   }
-		   }
-
-		   return ret;
-		   */
 	}
 	public String normalize(String input)
 	{
@@ -1360,20 +1345,6 @@ class Game extends Client implements ActionListener, WindowListener
 		switch(command)
 		{
 			case "move":
-				// Should print out what valid moves a player can make.
-				// Ex: Lawson is to the South. The Union is to the SouthEast
-				/*
-				   try{
-				   String newLoc = parameters+".jpg";
-				   System.out.println(newLoc);
-				   BufferedImage newLocation = ImageIO.read(new File(newLoc));
-				   picLabel.setIcon(new ImageIcon(newLocation));
-				   picLabel.repaint();
-				   }
-				   catch(Exception eee){
-				   System.out.println("well fucker");
-				   }
-				   */
 				if(parameters.equals("north"))
 				{
 					String local = userStats.location;
@@ -1604,11 +1575,11 @@ class Game extends Client implements ActionListener, WindowListener
 				//		dmgDealt = dmgDealt - (.5 * armor)
 				//		deal dmg
 				//		response = "You dealt " + dmgDealt + " damage.";
-				//	
+				//
 				}else{
 					response = "You are not in combat!";
 				}
-				
+
 				break;
 			case "flee":
 				//if(!isFighting)
@@ -1662,13 +1633,13 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "You are currently engaged in battle!";
 						break;
 					}
-				
+
 					Random generator = new Random();
 					int roll = generator.nextInt(10) + 1;
 					//System.out.println("$$$$ "+roll);
 					if (roll <= 4)
 					{
-						isFighting = true; 	
+						isFighting = true;
 						response = "A monster has engaged you in battle!";
 					}
 
@@ -1692,7 +1663,7 @@ class Game extends Client implements ActionListener, WindowListener
 		}
 		return response;
 	}
-	
+
 	//playerSearch is the act of searching in game. it determines if a monster attacks
 
 
