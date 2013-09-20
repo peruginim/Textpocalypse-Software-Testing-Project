@@ -59,8 +59,8 @@ public abstract class Client extends Thread implements Runnable
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-		//String serverHostname = new String ("borg21.cs.purdue.edu");
-		String serverHostname = new String ("localhost");
+		String serverHostname = new String ("borg18.cs.purdue.edu");
+		//String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4444.");
 
@@ -199,7 +199,7 @@ public abstract class Client extends Thread implements Runnable
 	public void run()
 	{
 		System.out.println("Started Thread");
-		String serverHostname = new String ("borg21.cs.purdue.edu");
+		String serverHostname = new String ("borg18.cs.purdue.edu");
 		//String serverHostname = new String ("localhost");
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4445.");
