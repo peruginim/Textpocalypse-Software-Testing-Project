@@ -1334,6 +1334,20 @@ class Game extends Client implements ActionListener, WindowListener
 		   return ret;
 		   */
 	}
+	public void redraw(int index, String local)
+	{
+		try
+		{
+			index = parseLocations(local);
+			BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
+			picLabel.setIcon(new ImageIcon(newLocation));
+			picLabel.repaint();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Error with Map");
+		}
+	}
 	public String normalize(String input)
 	{
 		char temp[] = input.toCharArray();
@@ -1398,17 +1412,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + north;
 						userStats.location = north;
 						sendLocation();
-						try
-						{
-							index = parseLocations(north);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, north);
 					}
 				}
 				else if(parameters.equals("south"))
@@ -1423,17 +1427,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + south;
 						userStats.location = south;
 						sendLocation();
-						try
-						{
-							index = parseLocations(south);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, south);
 					}
 				}
 				else if(parameters.equals("east"))
@@ -1448,17 +1442,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + east;
 						userStats.location = east;
 						sendLocation();
-						try
-						{
-							index = parseLocations(east);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, east);
 					}
 				}
 				else if(parameters.equals("west"))
@@ -1473,17 +1457,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + west;
 						userStats.location = west;
 						sendLocation();
-						try
-						{
-							index = parseLocations(west);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, west);
 					}
 				}
 				else if(parameters.equals("northeast"))
@@ -1498,17 +1472,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + northeast;
 						userStats.location = northeast;
 						sendLocation();
-						try
-						{
-							index = parseLocations(northeast);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, northeast);
 					}
 				}
 				else if(parameters.equals("northwest"))
@@ -1523,17 +1487,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + northwest;
 						userStats.location = northwest;
 						sendLocation();
-						try
-						{
-							index = parseLocations(northwest);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, northwest);
 					}
 				}
 				else if(parameters.equals("southeast"))
@@ -1548,17 +1502,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + southeast;
 						userStats.location = southeast;
 						sendLocation();
-						try
-						{
-							index = parseLocations(southeast);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, southeast);
 					}
 				}
 				else if(parameters.equals("southwest"))
@@ -1573,17 +1517,7 @@ class Game extends Client implements ActionListener, WindowListener
 						response = "Moving to " + southwest;
 						userStats.location = southwest;
 						sendLocation();
-						try
-						{
-							index = parseLocations(southwest);
-							BufferedImage newLocation = ImageIO.read(new File(location[index][1]));
-							picLabel.setIcon(new ImageIcon(newLocation));
-							picLabel.repaint();
-						}
-						catch(Exception e)
-						{
-							System.out.println("Error with Map");
-						}
+						redraw(index, southwest);
 					}
 				}
 				else if(parameters.equals("show"))
