@@ -10,19 +10,19 @@ be of use to you:
 	     
 'search area' - provides you with information about your surrounding area
 
-'inventory' - lists items in the player's inventory
+'inventory show' - lists items in the player's inventory
 
 'attack' - attempt to attack an enemy
 
 'flee' - attempt to run from an enemy
 
-'stats' - lists player's stats
+'stats show' - lists player's stats
 
-'where' - tells the player their current location
+'where show' - tells the player their current location
 
 'equip X' - equips item X to a usable slot. If the item is a weapon it will
             be equipped in the weapon slot. If there was already a weapon in 
             the weapon slot, it will be replaced by X. There is a weapon slot, 
             a head slot, and a body slot.
 	      	
-'equipped' - tells the player what is equipped.
+'equipped show' - tells the player what is equipped.

@@ -823,6 +823,7 @@ class Game extends Client implements ActionListener, WindowListener
 	String equipThis;
 	JFrame gameFrame;
 	public static String[][] location;
+	public static boolean isFighting;
 
 	//GameFrame
 	JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
@@ -845,8 +846,6 @@ class Game extends Client implements ActionListener, WindowListener
 
 	public static void main(String[] args)
 	{
-
-
 	}
 
 	public Game()
@@ -861,6 +860,7 @@ class Game extends Client implements ActionListener, WindowListener
 
 	public void instantiateLocations()
 	{
+		isFighting = false;
 		location = new String[10][14];
 		location[0][0] = "P.U.S.H.";
 		location[0][1] = "PUSH.jpg";
@@ -1325,6 +1325,7 @@ class Game extends Client implements ActionListener, WindowListener
 		   ret = i;
 		   }
 		   }
+
 		   return ret;
 		   */
 	}
@@ -1584,8 +1585,8 @@ class Game extends Client implements ActionListener, WindowListener
 				break;
 			case "attack":
 				// Should be a instance field that keeps track of the player being in a fight or not
-				// if fighting
-				// {
+				 if(isFighting)
+				 {
 				// 		dice roll to see if a player hits or misses (they have hit chance
 				// 		dmgDealt = player dmg (Damage + strength)
 				// 		dice roll to see if player crits (player has %crit stat)
@@ -1594,17 +1595,21 @@ class Game extends Client implements ActionListener, WindowListener
 				//		dmgDealt = dmgDealt - (.5 * armor)
 				//		deal dmg
 				//		response = "You dealt " + dmgDealt + " damage.";
-				//	}
-				//	else
-				//		response = "You are not in combat!";
+				//	
+				}else{
+					response = "You are not in combat!";
+				}
+				
 				break;
 			case "flee":
-				// if not in combat
-				// 		response = "You are not in combat!";
+				//if(!isFighting)
+				//{
+				 //		response = "You are not in combat!";
+				//}
 				// else if in Ross Ade
 				// 		response = "There is no escape!";
-				// else
-				// {
+				//else
+				//{
 				//		if monster level = 1
 				//		{
 				//			response = "Successfully Escaped";
@@ -1638,9 +1643,27 @@ class Game extends Client implements ActionListener, WindowListener
 				break;
 			case "where":
 				// retrieval of location name (Haas, LAwson, Ross-Ade)
-				// response = location;
+				//if(parameters.equals(null));
+				if(parameters.equals("show")) response = userStats.location;
 				break;
 			case "search":
+				if(parameters.equals("area"))
+				{
+					if(isFighting){
+						response = "You are currently engaged in battle!";
+						break;
+					}
+				
+					Random generator = new Random();
+					int roll = generator.nextInt(10) + 1;
+					//System.out.println("$$$$ "+roll);
+					if (roll <= 4)
+					{
+						isFighting = true; 	
+						response = "A monster has engaged you in battle!";
+					}
+
+				}
 				// retreives player int
 				// response = location.description;
 				// if int > threshold 1
@@ -1660,31 +1683,12 @@ class Game extends Client implements ActionListener, WindowListener
 		}
 		return response;
 	}
+	
+	//playerSearch is the act of searching in game. it determines if a monster attacks
+
 
 }
 
-/*
- * @Location class stores location data
- */
-class Location
-{
-	String locName;
-	String north;
-	String south;
-	String east;
-	String west;
-	String northeast;
-	String northwest;
-	String southeast;
-	String southwest;
-
-	String description;
-	String picName;
-	// thresh = int threshold a player must meet in order to gain further information.
-	String thresh1;
-	String thresh2;
-	String thresh3;
-}
 
 /*
  * @List class stores all perminent user data
