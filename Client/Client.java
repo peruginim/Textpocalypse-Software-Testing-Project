@@ -1,6 +1,7 @@
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -10,24 +11,30 @@ import java.net.*;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
+
 /*
  *
  *	@Client is an abstract class with four stub methods which must
- *	be implemented in any child classes.  Child classes of Client
+ *	be implemented in any child classes.  Child classes of Client 
  *	should include any GUI screens in Textpocalypse (Login, Create
- *	User, Menu, Instructions, the actual game).  These screens will
+ *	User, Menu, Instructions, the actual game).  These screens will 
  *	create the necessary frames, panels, buttons and labels for its
- *	screen.  Additionally, these child classes inherit access to the
+ *	screen.  Additionally, these child classes inherit access to the 
  *	connectToServer function.
  *
  */
 
 
-public abstract class Client
+public abstract class Client extends Thread implements Runnable
 {
 
 	public static String currentUser;
 	public static boolean connected = false;
+	public static JTextArea chatTextField;
+	public static JTextField chatTextBox;
+	public static PrintWriter out2;
+	public static String outToClient;
+	public static BufferedReader in2;
 	public static String[] stats;
 	//Creates the login screen
 	public static void main(String[] args)
@@ -47,116 +54,148 @@ public abstract class Client
 	//Child classes can call connectToServer
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
-		//String serverHostname = new String ("borg21.cs.purdue.edu");
-		String serverHostname = new String ("localhost");
-		System.out.println ("Attemping to connect to host " +
-				serverHostname + " on port 4444.");
+        String serverHostname = new String ("borg21.cs.purdue.edu");
+        //String serverHostname = new String ("localhost");
+        System.out.println ("Attemping to connect to host " +
+		serverHostname + " on port 4444.");
 
-		Socket echoSocket = null;
-		PrintWriter out = null;
-		BufferedReader in = null;
+        Socket echoSocket = null;
+        PrintWriter out = null;
+	BufferedReader in = null;
 
-		try {
-			echoSocket = new Socket(serverHostname, 4444);
-			out = new PrintWriter(echoSocket.getOutputStream(), true);
-			in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-		} catch (UnknownHostException e) {
-			System.err.println("Don't know about host: " + serverHostname);
-			//System.exit(1);
-		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for "
-					+ "the connection to: " + serverHostname);
-			//System.exit(1);
-		}
-
-		switch(message)
-		{
-			//Startup
-			case 1:
-				//out.println("starting new client");
-				break;
-				//Login
-			case 2:
-				out.println(user + "," + pass + ","  + message);
-				String tempOut = in.readLine();
-				if(tempOut.equals("Success"))
-				{
-					//Login Succesful
-					out.close();
-					echoSocket.close();
-					return true;
-				}else
-				{
-					//Login Unsuccessful
-					out.close();
-					echoSocket.close();
-					return false;
-				}
-				//NewUser
-			case 3:
-				out.println(user + "," + pass + "," + message);
-				if(in.readLine().equals("Success"))
-				{
-					out.close();
-					echoSocket.close();
-					return true;
-				}else
-				{
-					//Username is taken
-					out.close();
-					echoSocket.close();
-					return false;
-				}
-				//Logout
-			case 4:
-				out.println(user + "," + pass + "," + message);
+        try {
+            echoSocket = new Socket(serverHostname, 4444);
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
+	    in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host: " + serverHostname);
+            //System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for "
+                               + "the connection to: " + serverHostname);
+            //System.exit(1);
+        }
+        
+        switch(message)
+        {
+        	//Startup
+       		case 1:
+       			//out.println("starting new client");
+			break;
+       		//Login
+ 		case 2:
+ 			out.println(user + "," + pass + ","  + message);
+			String tempOut = in.readLine();
+			if(tempOut.equals("Success"))
+			{
+				//Login Succesful
 				out.close();
 				echoSocket.close();
 				return true;
-				//Stats
-			case 5:
-				//out.println(user + "," + pass + "," + message);
-				//String tempOut = in.readLine();
-				//stats = tempOut.split(",");
+			}else
+			{
+				//Login Unsuccessful
+				out.close();
+				echoSocket.close();
 				return false;
-		}
-
+			}
+		//NewUser
+		case 3:
+			out.println(user + "," + pass + "," + message);
+			if(in.readLine().equals("Success"))
+			{
+				out.close();
+				echoSocket.close();
+				return true;
+			}else
+			{
+				//Username is taken
+				out.close();
+				echoSocket.close();
+				return false;
+			}
+       		//Logout
+		case 4:
+			out.println(user + "," + pass + "," + message);
+			out.close();
+			echoSocket.close();
+			return true;
+        }
+        
 		out.close();
 		echoSocket.close();
 		return true;
-
+    
 	}
 
-
-	/*
-
-	//Intialize connection
-	String receivedSentence;
-	//Socket clientSocket = new Socket("borg21.cs.purdue.edu", 4444);
-	Socket clientSocket = new Socket("localhost", 4444);
-	DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-	BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	switch(message)
+	public void run() 
 	{
-	//Startup
-	case 1:
-	outToServer.writeBytes("Hello, I am the client!\n");
-	receivedSentence = inFromServer.readLine();
-	System.out.println("FROM SERVER: " + receivedSentence);
-	return true;
-	//Login
-	case 2: outToServer.writeBytes(user + ", " + message);
-	receivedSentence = inFromServer.readLine();
-	System.out.println("Blah");
-	//return true for now, it will depend on if the user is accepted from the server
-	return true;
+	System.out.println("Started Thread");
+        String serverHostname = new String ("borg21.cs.purdue.edu");
+        //String serverHostname = new String ("localhost");
+        System.out.println ("Attemping to connect to host " +
+		serverHostname + " on port 4445.");
 
-	//NewUser
-	case 3: return false;
-	default: return false;
+        Socket echoSocket = null;
+        //PrintWriter out2 = null;
+	//BufferedReader in = null;
+
+        try {
+            echoSocket = new Socket(serverHostname, 4445);
+            out2 = new PrintWriter(echoSocket.getOutputStream(), true);
+	    in2 = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host: " + serverHostname);
+            //System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for "
+                               + "the connection to: " + serverHostname);
+            //System.exit(1);
+        }
+
+	//out.println(chatToServer);
+	String temp = "";
+	int tempInt = 0;
+	char tempChar = 'a';
+	while(true){
+		try{
+			//out.println(chatToServer);
+			while(true)
+			{
+				tempInt = in2.read();
+				//System.out.println(tempInt);
+				tempChar = (char)tempInt;
+				if(tempInt == 0)
+					break;
+				temp = temp + tempChar;
+				//System.out.println(temp);
+			}
+			System.out.println("This is what is printed to the Textbox " + temp);
+			if(temp.charAt(0) == '\n')
+			{
+				temp = temp.substring(1);
+			}
+			chatTextField.setText(temp);
+			temp = "";
+			//outToClient = temp;
+			//System.out.println(outToClient);
+			if(temp == null)
+			{
+				System.out.println("broke loop");
+				break;
+			}
+		}catch(Exception blah){
+
+		}	
+	}        
+	//out2.close();
+	/*try{
+		echoSocket.close();
+	}catch(IOException excep){
+		System.out.println("a;sjfdkasdhf;hasd;jfhalsdhf;lasdfasdf");
+	}*/
+  
 	}
-}
-*/
 }
 
 
@@ -180,6 +219,7 @@ class Login extends Client implements ActionListener
 
 	public static void main(String[] args)
 	{
+		//(new Thread(new Login())).start();
 	}
 
 	public Login()
@@ -189,9 +229,10 @@ class Login extends Client implements ActionListener
 		createPanels();
 		createFrame();
 		try
-		{
+		{ 
 			if(!(connected)){
-				if ( connectToServer("", "",  1) ){ serverStatus.setText("Server is running, better catch it!");
+				if ( connectToServer("", "",  1) ){ 
+					serverStatus.setText("Server is running, better catch it!");
 					connected = true;
 				}
 			}
@@ -297,6 +338,11 @@ class Login extends Client implements ActionListener
 			//Change currentUser to logged in User
 		}else if(pressed.equals(exitButton))
 		{
+			try{
+				boolean temp = connectToServer(currentUser, "", 4);
+			}catch(Exception excep){
+				
+			}
 			System.exit(1);
 		}
 	}
@@ -307,11 +353,11 @@ class Login extends Client implements ActionListener
 
 /*
  *
- * @CreateNewUser creates a new form allowing the user to
+ * @CreateNewUser creates a new form allowing the user to 
  *  enter a desired username and password for character
  *  creation. This class will send user data to the server
  *  which will verify the uniqueness of the username.
- *
+ *  
  */
 
 class CreateNewUser extends Client implements ActionListener
@@ -321,7 +367,7 @@ class CreateNewUser extends Client implements ActionListener
 	JFrame createUserFrame;
 
 	//createUserPanel
-	JPanel createUserPanel;
+	JPanel createUserPanel; 
 	JButton createUserButton, backButton;
 	JLabel usernameText;
 	JLabel passwordText;
@@ -440,7 +486,7 @@ class CreateNewUser extends Client implements ActionListener
 					}
 				}catch(Exception excep)
 				{
-					System.out.print("fasdfasdl;kfj");
+					System.out.print("fasdfasdl;kfj");	
 				}
 				//if no update verificationText telling that the name is taken
 			}
@@ -464,90 +510,90 @@ class CreateNewUser extends Client implements ActionListener
 class MainMenu extends Client implements ActionListener
 {
 
-	JFrame mainMenuFrame;
+    JFrame mainMenuFrame;
 
-	//MainMenuFrame
-	JButton instructButton, enterButton, logoutButton;
-	JLabel currentUserLabel;
-	JPanel buttonPanel;
+    //MainMenuFrame
+    JButton instructButton, enterButton, logoutButton;
+    JLabel currentUserLabel;
+    JPanel buttonPanel;
 
-	public static void main(String[] args)
-	{
-	}
+    public static void main(String[] args)
+    {
+    }
 
-	public MainMenu()
-	{
-		createButtons();
-		createLabels();
-		createPanels();
-		createFrame();
-	}
-
-	public void createFrame()
-	{
+    public MainMenu()
+    {
+        createButtons();
+        createLabels();
+        createPanels();
+        createFrame();
+    }
+    
+    public void createFrame()
+    {		
 		mainMenuFrame = new JFrame("Textpocalypse: Purdue -- MAIN MENU");
-		mainMenuFrame.setLayout(new GridLayout(1,2));
-		mainMenuFrame.setSize(500, 200);
+        mainMenuFrame.setLayout(new GridLayout(1,2));
+        mainMenuFrame.setSize(500, 200);
 
-		mainMenuFrame.add(buttonPanel);
-		mainMenuFrame.add(currentUserLabel);
+        mainMenuFrame.add(buttonPanel);
+        mainMenuFrame.add(currentUserLabel);
 
-		mainMenuFrame.setResizable(false);
-		mainMenuFrame.setLocationRelativeTo(null);
-		mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainMenuFrame.setVisible(true);
-	}
+        mainMenuFrame.setResizable(false);
+        mainMenuFrame.setLocationRelativeTo(null);
+        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.setVisible(true);
+    }
 
-	public void createPanels()
-	{
-		buttonPanel = new JPanel(new GridLayout(3,1));
-		buttonPanel.add(instructButton);
-		buttonPanel.add(enterButton);
-		buttonPanel.add(logoutButton);
-	}
+    public void createPanels()
+    {
+        buttonPanel = new JPanel(new GridLayout(3,1));
+        buttonPanel.add(instructButton);
+        buttonPanel.add(enterButton);
+        buttonPanel.add(logoutButton);
+    }
 
-	public void createLabels()
-	{
-		currentUserLabel = new JLabel("Current User:  " + currentUser);
-	}
+    public void createLabels()
+    {
+        currentUserLabel = new JLabel("Current User:  " + currentUser);
+    }
 
-	public void createButtons()
-	{
-		instructButton = new JButton("Instructions");
-		instructButton.addActionListener(this);
+    public void createButtons()
+    {
+        instructButton = new JButton("Instructions");
+        instructButton.addActionListener(this);
 
-		enterButton = new JButton("Enter World");
-		enterButton.addActionListener(this);
+        enterButton = new JButton("Enter World");
+        enterButton.addActionListener(this);
 
-		logoutButton = new JButton("Logout");
-		logoutButton.addActionListener(this);
-	}
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(this);
+    }
+    
+    public void actionPerformed(ActionEvent e)
+    {
+        Object pressed = e.getSource();
+        if(pressed.equals(instructButton))
+        {
+            //Go to instructions dialog
+            new Instructions();
+        }else if(pressed.equals(enterButton))
+        {
+            //Go to World Dialog Box
+            mainMenuFrame.dispose();
+            (new Thread(new Game())).start();
+        }else if(pressed.equals(logoutButton))
+        {
+	    try{	
+	    	boolean temp = connectToServer(currentUser, "", 4);
+            	currentUser = null;
+            	mainMenuFrame.dispose();
+            	new Login();
+	    }catch(Exception excep){
 
-	public void actionPerformed(ActionEvent e)
-	{
-		Object pressed = e.getSource();
-		if(pressed.equals(instructButton))
-		{
-			//Go to instructions dialog
-			new Instructions();
-		}else if(pressed.equals(enterButton))
-		{
-			//Go to World Dialog Box
-			mainMenuFrame.dispose();
-			new Game();
-		}else if(pressed.equals(logoutButton))
-		{
-			try{
-				boolean temp = connectToServer(currentUser, "", 4);
-				currentUser = null;
-				mainMenuFrame.dispose();
-				new Login();
-			}catch(Exception excep){
+	    }
+        }
 
-			}
-		}
-
-	}
+    }
 
 
 }
@@ -555,9 +601,9 @@ class MainMenu extends Client implements ActionListener
 
 
 /*
- *
+ * 
  * @The instructions dialog box, to be opened when pressed. Will not close original box it was opened from
- *
+ * 
  */
 
 
@@ -575,7 +621,7 @@ class Instructions extends Client implements ActionListener
 	}
 
 	Instructions()
-	{
+	{	
 		createButtons();
 		createLabels();
 		createFrame();
@@ -599,7 +645,7 @@ class Instructions extends Client implements ActionListener
 
 	public void createLabels()
 	{
-		howtoPlayText = new JLabel("Draw text from intro.txt");
+		howtoPlayText = new JLabel("A bunch of shit");
 	}
 
 	public void createButtons()
@@ -622,164 +668,184 @@ class Instructions extends Client implements ActionListener
 
 /*
  * @The actual game menu
- *
+ * 
  */
 
 class Game extends Client implements ActionListener
 {
+    String equipThis;
+    JFrame gameFrame;
 
-	String equipThis;
-	JFrame gameFrame;
+    //GameFrame
+    JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
 
-	//GameFrame
-	JPanel commandPanel, mapPanel, chatPanel, buttonPanel;
+    //CommandPanel
+    //?
+    JTextArea commandResponse;
+    JTextField commandField;
+    JScrollPane scroll;
+    //MapPanel
+    JLabel picLabel;
+    BufferedImage myPicture;
 
-	//CommandPanel
-	//?
-	JTextArea commandResponse;
-	JTextField commandField;
-	JScrollPane scroll;
-	//MapPanel
-	//?
-	JLabel picLabel;
-	BufferedImage myPicture;
+    //chatPanel
+    JScrollPane scroll2;
 
-	//chatPanel
-	//?
+    //ButtonPanel
+    JLabel currentUserLabel;
+    JButton instructButton, logoutButton, exitButton;
 
-	//ButtonPanel
-	JLabel currentUserLabel;
-	JButton instructButton, logoutButton, exitButton;
+    public static void main(String[] args)
+    {
+    }
+    
+    public Game()
+    {
+	createTextFields();
+        createButtons();
+        createLabels();
+        createPanels();
+        createFrame();
+    }
 
-	public static void main(String[] args)
-	{
+    public void createFrame()
+    {
+        gameFrame = new JFrame("Textpocalypse: Purdue -- GAME");
+        gameFrame.setLayout(new GridLayout(2,2));
+        gameFrame.setSize(750, 750);
+
+        gameFrame.add(commandPanel);
+        gameFrame.add(mapPanel);
+        gameFrame.add(chatPanel);
+        gameFrame.add(buttonPanel);
+
+        gameFrame.setResizable(false);
+        gameFrame.setLocationRelativeTo(null);
+        gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameFrame.setVisible(true);
+    }
+
+    public void createPanels()
+    {
+        //This will be decided Later
+        commandPanel = new JPanel(new BorderLayout());
+	commandPanel.add(scroll, BorderLayout.CENTER);
+	commandPanel.add(commandField, BorderLayout.PAGE_END);
+
+        //This will be decided Later
+        mapPanel = new JPanel(new BorderLayout());
+	try{
+		myPicture = ImageIO.read(new File("PUSH.jpg"));
+	}catch(Exception e){
+		System.out.println("wellfuck2");
 	}
+	picLabel = new JLabel(new ImageIcon(myPicture));
+	mapPanel.add(picLabel);
 
-	public Game()
+        //This will be decided Later
+        chatPanel = new JPanel(new BorderLayout());
+	chatPanel.add(scroll2, BorderLayout.CENTER);
+	chatPanel.add(chatTextBox, BorderLayout.PAGE_END);
+
+        buttonPanel = new JPanel(new GridLayout(4,1));
+        buttonPanel.add(currentUserLabel);
+        buttonPanel.add(instructButton);
+        buttonPanel.add(logoutButton);
+        buttonPanel.add(exitButton);
+    }
+
+    public void createLabels()
+    {
+	currentUserLabel = new JLabel("Current User:  " + currentUser);
+	commandResponse = new JTextArea("Enter Command");
+	commandResponse.setLineWrap(true);
+	commandResponse.setEditable(false);
+	scroll = new JScrollPane(commandResponse);
+	scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+	scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+
+
+	chatTextField = new JTextArea("");
+	chatTextField.setLineWrap(true);
+	chatTextField.setEditable(false);
+	//Need scrollbar to work may not be working because one solid string is being passed
+	scroll2 = new JScrollPane(chatTextField);
+	scroll2.setVerticalScrollBarPolicy(JScrollPane.	VERTICAL_SCROLLBAR_ALWAYS);
+	scroll2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	DefaultCaret caret = (DefaultCaret)chatTextField.getCaret();
+	caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+    }
+
+    public void createTextFields()
+    {
+    	commandField = new JTextField();
+	commandField.addActionListener(this);
+
+	chatTextBox = new JTextField();
+	chatTextBox.addActionListener(this);
+    }
+    public void createButtons()
+    {
+        instructButton = new JButton("Instructions");
+        instructButton.addActionListener(this);
+
+        logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(this);
+
+        exitButton = new JButton("Exit Game");
+        exitButton.addActionListener(this);
+    }
+
+    public void actionPerformed(ActionEvent e)
+    {
+        Object pressed = e.getSource();
+        if(pressed.equals(instructButton))
+        {
+            new Instructions();
+        }else if(pressed.equals(logoutButton))
+        {   
+	    try{
+	    	boolean temp = connectToServer(currentUser, "", 4);
+            	currentUser = null;
+            	gameFrame.dispose();
+            	new Login();
+	    }catch(Exception excep){
+		
+	    }
+        }else if(pressed.equals(exitButton))
+        {
+	    try{
+		boolean temp = connectToServer(currentUser, "", 4);
+	    }catch(Exception excep){
+		
+	    }
+            System.exit(1);
+        }else if(pressed.equals(commandField))
 	{
-		createTextFields();
-		createButtons();
-		createLabels();
-		createPanels();
-		createFrame();
-	}
-
-	public void createFrame()
-	{
-		gameFrame = new JFrame("Textpocalypse: Purdue -- GAME");
-		gameFrame.setLayout(new GridLayout(2,2));
-		gameFrame.setSize(750, 750);
-
-		gameFrame.add(commandPanel);
-		gameFrame.add(mapPanel);
-		gameFrame.add(chatPanel);
-		gameFrame.add(buttonPanel);
-
-		gameFrame.setResizable(false);
-		gameFrame.setLocationRelativeTo(null);
-		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		gameFrame.setVisible(true);
-	}
-
-	public void createPanels()
-	{
-		//This will be decided Later
-		commandPanel = new JPanel(new BorderLayout());
-		commandPanel.add(scroll, BorderLayout.CENTER);
-		commandPanel.add(commandField, BorderLayout.PAGE_END);
-
-		//This will be decided Later
-		mapPanel = new JPanel(new BorderLayout());
-		try{myPicture = ImageIO.read(new File("Armstrong.jpg"));
-		}catch(Exception e){
-			System.out.println("wellfuck2");
+		String text = commandField.getText();
+		if (text.contains("equip")){
+			String [] array = text.split(" ", 2);
+			equipThis = array[1];
 		}
-		picLabel = new JLabel(new ImageIcon(myPicture));
-		mapPanel.add(picLabel);
-
-		//This will be decided Later
-		chatPanel = new JPanel(new BorderLayout());
-
-		buttonPanel = new JPanel(new GridLayout(4,1));
-		buttonPanel.add(currentUserLabel);
-		buttonPanel.add(instructButton);
-		buttonPanel.add(logoutButton);
-		buttonPanel.add(exitButton);
-	}
-
-	public void createLabels()
-	{
-		currentUserLabel = new JLabel("Current User:  " + currentUser);
-		commandResponse = new JTextArea("Enter Command");
-		commandResponse.setLineWrap(true);
-		commandResponse.setEditable(false);
-		commandResponse.setVisible(true);
-		scroll = new JScrollPane(commandResponse);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//	JScrollPane scroller = new JScrollPane(commandResponse, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		//	commandResponse.add(scroller);
-	}
-
-	public void createTextFields()
-	{
-		commandField = new JTextField();
-		commandField.addActionListener(this);
-	}
-	public void createButtons()
-	{
-		instructButton = new JButton("Instructions");
-		instructButton.addActionListener(this);
-
-		logoutButton = new JButton("Logout");
-		logoutButton.addActionListener(this);
-
-		exitButton = new JButton("Exit Game");
-		exitButton.addActionListener(this);
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		Object pressed = e.getSource();
-		if(pressed.equals(instructButton))
-		{
-			new Instructions();
+		commandResponse.setText(gameLogic(text));
+		commandField.setText("");
+		try{
+			BufferedImage newImage = ImageIO.read(new File("rossAide.jpg"));
+			picLabel.setIcon(new ImageIcon(newImage));
+			picLabel.repaint();
 		}
-		else if(pressed.equals(logoutButton))
-		{
-			try{
-				boolean temp = connectToServer(currentUser, "", 4);
-				currentUser = null;
-				gameFrame.dispose();
-				new Login();
-			}catch(Exception excep){
-
-			}
-		}
-		else if(pressed.equals(exitButton))
-		{
-			System.exit(1);
-		}
-		else if(pressed.equals(commandField))
-		{
-			String text = commandField.getText();
-			if (text.contains("equip")){
-				String [] array = text.split(" ", 2);
-				equipThis = array[1];
-			}
-			commandResponse.setText(gameLogic(text));
-			commandField.setText("");
-			try{
-				BufferedImage newImage = ImageIO.read(new File("PUSH.jpg"));
-				picLabel.setIcon(new ImageIcon(newImage));
-				picLabel.repaint();
-			}
-			catch(Exception ee){
-				System.out.println("well fuck3");
-			}
-
+		catch(Exception ee){
+			System.out.println("well fuck3");
 		}
 	}
+	else if(pressed.equals(chatTextBox))
+	{
+		String temp = chatTextBox.getText();
+		out2.println(currentUser + ": " + temp + " ");
+		chatTextBox.setText("");
+	}
+    }
 
 	/*
 	 * Reads in command line text for commands.....
@@ -829,8 +895,6 @@ class Game extends Client implements ActionListener
 		}
 		return response;
 	}
-
-
 
 }
 
