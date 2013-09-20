@@ -9,8 +9,7 @@ public class Server extends Thread
 
 	public boolean handleRequest(String user, String pass, int message)
 	{
-		//serialize();
-		//deserialize();
+
 		switch(message)
 		{
 			//Login
@@ -48,8 +47,8 @@ public class Server extends Thread
 					userList[index].password = pass;
 					userList[index].loggedIn = true;
 					index++;
-					serialize();
-					deserialize();
+					serializeToFile();
+					deserializeFromFile();
 					return true;
 				}else
 				{
@@ -62,29 +61,48 @@ public class Server extends Thread
 					if(userList[i].user.equals(user))
 					{
 						userList[i].loggedIn = false;
-						serialize();
+						serializeToFile();
 						return true;
 					}
 				}
+				
 		}
 		return false;
+	}
+	
+	
+	// handle receiving list class
+	public List handleList(String user){
+		for(int i = 0; i < index; i++)
+		{
+			if(userList[i].user.equals(user))
+			{
+				return userList[i];
+			
+			}
+		}
+		return null;
+	
+	
+	
 	}
 	
 	
 	
 /*
  *
- * Serialize saves the array of List objects to disk
+ * serializeToFile saves the array of List objects to disk
  * allowing data to be stored when the server is offline
  *
  */
-	public void serialize(){
+	public void serializeToFile()
+	{
 	
 		System.out.println("SERIALIZE!");
 		
 		for (int x=0; x<index; x++)
 		{
-			System.out.println("List to serialize...");
+			System.out.println("List to serialize to disk...");
 			System.out.println("User: " + userList[x].user);
 			System.out.println("Password: " + userList[x].password);
 			System.out.println("Location: " + userList[x].location);
@@ -120,12 +138,13 @@ public class Server extends Thread
   	
 /*
  *
- * Deserialize loads from disk the saved instance of the player database
+ * deserializeFromFile loads from disk the saved instance of the player database
  *
  */
-	public static void deserialize(){
+	public static void deserializeFromFile()
+	{
 	
-		System.out.println("DESERIALIZE!");
+		System.out.println("DESERIALIZE from disk!");
 		
      	try
       	{
@@ -171,7 +190,8 @@ public class Server extends Thread
 			}
 				
 		}
-	}	
+	}
+	
 	
  	public static void main(String[] args) throws IOException 
   	{ 
@@ -185,7 +205,7 @@ public class Server extends Thread
     		System.out.println("creating player data files");
     	}else
     	{
-			deserialize();
+			deserializeFromFile();
 		}
 			
    		try { 
@@ -245,17 +265,33 @@ public class Server extends Thread
         	{ 
  	       		System.out.println ("Server: " + inputLine);
 			String[] parsedCommand  = inputLine.split(",");
-			boolean temp = handleRequest(parsedCommand[0], parsedCommand[1], Integer.parseInt(parsedCommand[2]));
-			if(temp)
+			
+			if(Integer.parseInt(parsedCommand[2]) == 5)
 			{
-				out.println("Success");
-			}else
-			{
-				out.println("Failure");
-			}
-           		//out.println(inputLine); 
-
-           		if (inputLine.equals("Bye.")) break; 
+				List returnList;
+				returnList = handleList(parsedCommand[0]);
+				//send object back to client
+				try{
+					ObjectOutputStream outStream = new ObjectOutputStream(clientSocket.getOutputStream());
+					outStream.writeObject(returnList);
+				}catch(Exception eblah){
+					System.out.println(eblah);
+				}
+				
+			
+			}else{
+				boolean temp = handleRequest(parsedCommand[0], parsedCommand[1], Integer.parseInt(parsedCommand[2]));
+				if(temp)
+				{
+					out.println("Success");
+				}else
+				{
+					out.println("Failure");
+				}
+           			//out.println(inputLine); 
+	
+	           		if (inputLine.equals("Bye.")) break;
+	        } 
         	} 
 
         	out.close(); 
