@@ -368,7 +368,7 @@ class List implements Serializable
 {
 	String user;
 	String password;
-	String location;
+	String location = "P.U.S.H.";
 	
 	int health = 10;
 	int strength = 1;
