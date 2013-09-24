@@ -8,7 +8,30 @@ public class ChatServer extends Thread
 	public static Socket[] clientArray;
 	public static int clientIndex;
 	public static String buffer;
+	public static String[] messages;
+	public static int messageIndex;
 
+	public void sendOnConnect(Socket cli) throws Exception
+	{
+		PrintWriter out = new PrintWriter(cli.getOutputStream(), true);
+		String temp = "";
+		int i = messageIndex;
+		while(true)
+		{
+			System.out.println(messages[i]);
+			if(!(messages[i].equals(null)))
+			{
+				temp = temp.concat(messages[i] + "\n");
+			}
+			i++;
+			i = i % 5;
+			if(i == messageIndex)
+			{
+				break;
+			}
+		}
+		out.println(temp + Character.toString((char)0));
+	}
 
 	public void sendToAll() throws Exception
 	{
@@ -37,6 +60,8 @@ public class ChatServer extends Thread
  	public static void main(String[] args) throws IOException 
   	{ 
 	clientArray = new Socket[100];
+	messages = new String[6];
+	messageIndex = 1;
 	clientIndex = 0;
 	buffer = "";
     	ServerSocket serverSocket = null; 
@@ -89,7 +114,8 @@ public class ChatServer extends Thread
     	System.out.println ("New Communication Thread Started for Chat");
 	try{
 		//set when first go to Game frame;
-		sendToAll();
+		sendOnConnect(clientSocket);
+		//sendToAll();
 	}catch(Exception send){
 
 	}
@@ -104,7 +130,10 @@ public class ChatServer extends Thread
         	while ((inputLine = in.readLine()) != null) 
         	{ 
  	       		//System.out.println ("Server: " + inputLine);
-			buffer = buffer.concat(inputLine + "\n");
+			buffer = inputLine + "\n";
+			messages[messageIndex] = inputLine;
+			messageIndex++;
+			messageIndex = messageIndex % 5;
 			System.out.println("This is the whole buffer: " + buffer);
 			try{
 				sendToAll();

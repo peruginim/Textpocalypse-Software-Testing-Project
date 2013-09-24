@@ -243,7 +243,7 @@ public abstract class Client extends Thread implements Runnable
 				{
 					temp = temp.substring(1);
 				}
-				chatTextField.setText(temp);
+				chatTextField.append(temp);
 				temp = "";
 				//outToClient = temp;
 				//System.out.println(outToClient);
@@ -388,7 +388,14 @@ class Login extends Client implements ActionListener
 				String userTemp = usernameTextBox.getText();
 				char[] passTemp = passwordTextBox.getPassword();
 				String passTemp2 = new String(passTemp);
-				boolean accepted = connectToServer(userTemp, passTemp2, 2);
+				boolean accepted = false;
+				if(passTemp2.contains(","))
+				{
+					serverStatus.setText("Do not enter commas into the password field");
+					return;
+				}else{
+					accepted = connectToServer(userTemp, passTemp2, 2);
+				}
 				if(accepted)
 				{
 					//User accepted
@@ -547,6 +554,12 @@ class CreateNewUser extends Client implements ActionListener
 			}else if(pass.equals("") && pass2.equals(""))
 			{
 				verificationText.setText("The passwords you entered are empty!");	
+			}else if(user.contains(" ") || user.contains(","))
+			{
+				verificationText.setText("Your username can not contain a comma or a space!");
+			}else if(pass.contains(",") && pass2.contains(","))
+			{
+				verificationText.setText("Your password can not contain a comma!");
 			}else
 			{
 				try{
