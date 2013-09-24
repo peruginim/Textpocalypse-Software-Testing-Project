@@ -16,20 +16,25 @@ public class ChatServer extends Thread
 		PrintWriter out = new PrintWriter(cli.getOutputStream(), true);
 		String temp = "";
 		int i = messageIndex;
+		System.out.println("This is i " + i);
 		while(true)
 		{
-			System.out.println(messages[i]);
-			if(!(messages[i].equals(null)))
+			System.out.println("erg: " + messages[i]);
+			if(!(messages[i] == null))
 			{
+				System.out.println("updating temp");
 				temp = temp.concat(messages[i] + "\n");
 			}
 			i++;
-			i = i % 5;
+			i = i % 4;
+			System.out.println("blah " + i);
 			if(i == messageIndex)
 			{
+				System.out.println("I'm breaking! " + i);
 				break;
 			}
 		}
+		System.out.println("This is temp: " + temp);
 		out.println(temp + Character.toString((char)0));
 	}
 
@@ -60,8 +65,8 @@ public class ChatServer extends Thread
  	public static void main(String[] args) throws IOException 
   	{ 
 	clientArray = new Socket[100];
-	messages = new String[6];
-	messageIndex = 1;
+	messages = new String[5];
+	messageIndex = 0;
 	clientIndex = 0;
 	buffer = "";
     	ServerSocket serverSocket = null; 
@@ -117,7 +122,7 @@ public class ChatServer extends Thread
 		sendOnConnect(clientSocket);
 		//sendToAll();
 	}catch(Exception send){
-
+		System.out.print(send);
 	}
     	try { 
        	 	PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), 
@@ -133,7 +138,8 @@ public class ChatServer extends Thread
 			buffer = inputLine + "\n";
 			messages[messageIndex] = inputLine;
 			messageIndex++;
-			messageIndex = messageIndex % 5;
+			messageIndex = messageIndex % 4;
+			System.out.println("MessageIndex: " + messageIndex);
 			System.out.println("This is the whole buffer: " + buffer);
 			try{
 				sendToAll();
