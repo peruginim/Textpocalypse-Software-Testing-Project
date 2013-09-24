@@ -36,13 +36,22 @@ public abstract class Client extends Thread implements Runnable
 	public static String outToClient;
 	public static BufferedReader in2;
 	public static String[] stats;
+	public static String serverIP;
+	public static String chatServerIP;
 
 	public static List userStats;
 	public static int inventIndex;
 	//Creates the login screen
 	public static void main(String[] args)
 	{
-
+		serverIP = JOptionPane.showInputDialog("Please enter the Server IP Address!");
+		chatServerIP = JOptionPane.showInputDialog("Please enter the Chat Server IP Address!");
+		if(serverIP.equals("") || chatServerIP.equals(""))
+		{
+			JOptionPane.showMessageDialog(null, "You didn't enter an IP! Launch the program again!", "Well fuck!", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(1);
+		}
+		System.out.println(chatServerIP);
 		inventIndex = 0;
 		new Login();
 	}
@@ -60,7 +69,7 @@ public abstract class Client extends Thread implements Runnable
 	public boolean connectToServer(String user, String pass, int message) throws Exception
 	{
 		//String serverHostname = new String ("borg18.cs.purdue.edu");
-		String serverHostname = new String ("localhost");
+		String serverHostname = serverIP;
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4444.");
 
@@ -200,7 +209,7 @@ public abstract class Client extends Thread implements Runnable
 	{
 		System.out.println("Started Thread");
 		//String serverHostname = new String ("borg18.cs.purdue.edu");
-		String serverHostname = new String ("localhost");
+		String serverHostname = chatServerIP;
 		System.out.println ("Attemping to connect to host " +
 				serverHostname + " on port 4445.");
 
