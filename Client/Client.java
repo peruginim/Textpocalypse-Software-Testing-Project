@@ -310,7 +310,7 @@ class Login extends Client implements ActionListener
 			if(!(connected)){
 				if ( connectToServer("", "",  1) ){
 					serverStatus.setText("Server is running, better catch it!");
-					connected = true;
+
 				}
 			}
 		}
